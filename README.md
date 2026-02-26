@@ -42,6 +42,34 @@ npm install
 npm run dev
 ```
 
+## Testing Automated Discovery (Developer)
+1. Set env vars in `.env`:
+   - `DATABASE_URL`
+   - `SUPABASE_USER_ID`
+   - `GREENHOUSE_BOARD_TOKENS` (comma-separated)
+   - `LEVER_COMPANIES` (comma-separated)
+2. Seed sources for your user:
+```bash
+export $(cat ./.env | xargs)
+PYTHONPATH=packages python scripts/seed_sources.py
+```
+3. Enqueue a fetch:
+```bash
+curl -X POST http://localhost:8000/workflows/enqueue-fetch-listings \\
+  -H \"Authorization: Bearer <SUPABASE_JWT>\" \\
+  -H \"Content-Type: application/json\" \\
+  -d '{\"source_slug\":\"greenhouse\"}'
+```
+4. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
+```bash
+export $(cat ./.env | xargs)
+python scripts/run_worker.py
+```
+5. Verify jobs are created:
+```bash
+curl -H \"Authorization: Bearer <SUPABASE_JWT>\" http://localhost:8000/jobs
+```
+
 ## Supabase Auth (JWKS) Setup
 1. In Supabase, go to Project Settings -> API and note:
    - Project ref
