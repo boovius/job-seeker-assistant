@@ -1213,3 +1213,15 @@ For each source:
 - Use **lease-based work_items** in Postgres unless you _really_ need Redis.
 
 ---
+
+# Plan-Of-Action (Concise)
+1. Add source registry tables (`sources`, `user_sources`, `source_cursors`) to support configurable ingestion.
+2. Add adapter interface + registry so new sources can be plugged in without touching pipeline logic.
+3. Add workflow task types for `fetch_listings` and `fetch_detail`, using the queue runner.
+4. Implement first two adapters (Greenhouse + Lever) and test with a short company allowlist.
+5. Add dedupe + upsert logic into `jobs` and enqueue enrichment/scoring.
+
+## Execution Status
+- Completed: Step 1 and Step 2 scaffolding.
+- Completed: Step 3 workflow task support (`fetch_listings`, `fetch_detail`).
+- In progress: Step 4 adapters (Greenhouse + Lever).

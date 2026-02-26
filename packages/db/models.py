@@ -92,3 +92,40 @@ class WorkflowQueue(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     started_at = Column(DateTime(timezone=True), nullable=True)
     finished_at = Column(DateTime(timezone=True), nullable=True)
+
+
+class Source(Base):
+    __tablename__ = "sources"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    slug = Column(Text, unique=True, nullable=False)
+    adapter = Column(Text, nullable=False)
+    kind = Column(Text, nullable=False)
+    base_url = Column(Text, nullable=True)
+    default_config = Column(JSONB, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class UserSource(Base):
+    __tablename__ = "user_sources"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    source_id = Column(UUID(as_uuid=True), ForeignKey("sources.id"), nullable=False)
+    enabled = Column(Boolean, nullable=False, default=True)
+    weight = Column(Integer, nullable=False, default=1)
+    filters = Column(JSONB, nullable=True)
+    schedule = Column(JSONB, nullable=True)
+
+
+class SourceCursor(Base):
+    __tablename__ = "source_cursors"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    source_id = Column(UUID(as_uuid=True), ForeignKey("sources.id"), nullable=False)
+    cursor = Column(JSONB, nullable=True)
+    etag = Column(Text, nullable=True)
+    last_modified = Column(Text, nullable=True)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
