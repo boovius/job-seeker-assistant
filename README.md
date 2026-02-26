@@ -78,11 +78,11 @@ curl -H \"Authorization: Bearer <SUPABASE_JWT>\" http://localhost:8000/jobs
 3. The API will use the JWKS URL derived from `SUPABASE_PROJECT_REF` to verify tokens.
 
 ## Automated Discovery Sources (Phase 1)
-We currently support Greenhouse and Lever adapters. These are public job board endpoints and do not require API keys for reading job listings. You will need each company's board token (Greenhouse) or account name (Lever) to query their postings.citeturn0search0turn0search7
+We currently support Greenhouse and Lever adapters. These are public job board endpoints and do not require API keys for reading job listings. You will need each company's board token (Greenhouse) or account name (Lever) to query their postings.
 
 Examples:
-- Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`citeturn0search0
-- Lever: `https://api.lever.co/v0/postings/{company}`citeturn0search7
+- Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`
+- Lever: `https://api.lever.co/v0/postings/{company}`
 
 Configuration notes:
 - Store these identifiers in the `sources.default_config` JSON for each source.
