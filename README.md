@@ -108,7 +108,8 @@ curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
    - Project ref
    - JWKS URL
 2. Set `SUPABASE_PROJECT_REF` in `.env`.
-3. The API will use the JWKS URL derived from `SUPABASE_PROJECT_REF` to verify tokens.
+3. The API will use the JWKS URL derived from `SUPABASE_PROJECT_REF` to verify tokens (ES256).
+4. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
 
 ## Automated Discovery Sources (Phase 1)
 We currently support Greenhouse and Lever adapters. These are public job board endpoints and do not require API keys for reading job listings. You will need each company's board token (Greenhouse) or account name (Lever) to query their postings.
