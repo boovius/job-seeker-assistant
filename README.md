@@ -35,6 +35,8 @@ PYTHONPATH=../../packages uvicorn app.main:app --reload --port 8000
 ## Local Dev (API + Supabase)
 1. Create a Supabase project and note the database connection string.
 2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string. Supabase requires SSL, so include `sslmode=require`.
+   Example:
+   `postgresql+psycopg://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres?sslmode=require`
 3. Create the initial migration (one-time):
 ```bash
 export $(cat ./.env | xargs)
