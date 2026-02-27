@@ -53,21 +53,34 @@ npm run dev
 export $(cat ./.env | xargs)
 PYTHONPATH=packages python scripts/seed_sources.py
 ```
-3. Enqueue a fetch:
+3. (Optional) Seed via API:
 ```bash
-curl -X POST http://localhost:8000/workflows/enqueue-fetch-listings \\
-  -H \"Authorization: Bearer <SUPABASE_JWT>\" \\
-  -H \"Content-Type: application/json\" \\
-  -d '{\"source_slug\":\"greenhouse\"}'
+curl -X POST http://localhost:8000/sources/upsert \
+  -H "Authorization: Bearer <SUPABASE_JWT>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "slug": "greenhouse",
+    "adapter": "greenhouse_job_board_v1",
+    "kind": "ats_api",
+    "base_url": "https://boards.greenhouse.io",
+    "default_config": {"board_tokens": ["company_token"]}
+  }'
 ```
-4. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
+4. Enqueue a fetch:
+```bash
+curl -X POST http://localhost:8000/workflows/enqueue-fetch-listings \
+  -H "Authorization: Bearer <SUPABASE_JWT>" \
+  -H "Content-Type: application/json" \
+  -d '{"source_slug":"greenhouse"}'
+```
+5. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
 ```bash
 export $(cat ./.env | xargs)
 python scripts/run_worker.py
 ```
-5. Verify jobs are created:
+6. Verify jobs are created:
 ```bash
-curl -H \"Authorization: Bearer <SUPABASE_JWT>\" http://localhost:8000/jobs
+curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
 ```
 
 ## Supabase Auth (JWKS) Setup
