@@ -53,6 +53,11 @@ npm run dev
 export $(cat ./.env | xargs)
 PYTHONPATH=packages python scripts/seed_sources.py
 ```
+Or via CLI:
+```bash
+export $(cat ./.env | xargs)
+python scripts/cli.py seed-sources
+```
 3. (Optional) Seed via API:
 ```bash
 curl -X POST http://localhost:8000/sources/upsert \
@@ -78,10 +83,20 @@ curl -X POST http://localhost:8000/workflows/enqueue-fetch-listings \
 export $(cat ./.env | xargs)
 PYTHONPATH=packages python scripts/enqueue_all_sources.py
 ```
+Or via CLI:
+```bash
+export $(cat ./.env | xargs)
+python scripts/cli.py enqueue-all
+```
 6. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
 ```bash
 export $(cat ./.env | xargs)
 python scripts/run_worker.py
+```
+Or via CLI:
+```bash
+export $(cat ./.env | xargs)
+python scripts/cli.py run-worker
 ```
 7. Verify jobs are created:
 ```bash
