@@ -73,12 +73,17 @@ curl -X POST http://localhost:8000/workflows/enqueue-fetch-listings \
   -H "Content-Type: application/json" \
   -d '{"source_slug":"greenhouse"}'
 ```
-5. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
+5. Or enqueue all enabled sources for the user:
+```bash
+export $(cat ./.env | xargs)
+PYTHONPATH=packages python scripts/enqueue_all_sources.py
+```
+6. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
 ```bash
 export $(cat ./.env | xargs)
 python scripts/run_worker.py
 ```
-6. Verify jobs are created:
+7. Verify jobs are created:
 ```bash
 curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
 ```
