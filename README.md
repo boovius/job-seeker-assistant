@@ -2,6 +2,17 @@
 
 Phase 1 scaffold for the Job Intelligence Agent.
 
+## Summary
+Job Culler is a personal job intelligence system that ingests roles (manual URLs + automated discovery), normalizes them into a canonical `jobs` table, and runs server-side workflows for enrichment and scoring. The core pipeline uses a workflow queue to drive ingestion and processing, with adapters for ATS/job-board sources like Greenhouse and Lever. A minimal React UI supports manual URL intake and job review.
+
+**API surface (current)**
+- `POST /jobs/manual` — manual URL intake
+- `GET /jobs` — list jobs
+- `GET /manual-submissions` — list manual intake records
+- `POST /workflows/enqueue-fetch-listings` — enqueue automated discovery
+- `POST /workflows/run-once` — run one workflow task
+- `POST /sources/upsert` — upsert source definitions
+
 ## Structure
 - `apps/api`: FastAPI backend
 - `apps/web`: React frontend (Vite)
@@ -23,7 +34,7 @@ PYTHONPATH=../../packages uvicorn app.main:app --reload --port 8000
 
 ## Local Dev (API + Supabase)
 1. Create a Supabase project and note the database connection string.
-2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string.
+2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string. Supabase requires SSL, so include `sslmode=require`.
 3. Create the initial migration (one-time):
 ```bash
 export $(cat ./.env | xargs)
