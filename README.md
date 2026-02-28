@@ -69,6 +69,11 @@ export $(cat ./.env | xargs)
 PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
 ```
 Note: `revision --autogenerate` creates the migration file; `upgrade head` applies it to the database.
+To confirm migrations:
+```bash
+PYTHONPATH=packages alembic -c packages/db/alembic.ini current
+PYTHONPATH=packages alembic -c packages/db/alembic.ini history
+```
 
 ## Local Dev (API + Local Postgres via Docker)
 ```bash
