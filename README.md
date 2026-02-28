@@ -12,6 +12,9 @@ Job Culler is a personal job intelligence system that ingests roles (manual URLs
 - `POST /workflows/enqueue-fetch-listings` — enqueue automated discovery
 - `POST /workflows/run-once` — run one workflow task
 - `POST /sources/upsert` — upsert source definitions
+- `GET /sources` — list sources
+- `GET /queue` — list queue items
+- `GET /queue/failed` — list failed queue items
 
 ## Structure
 - `apps/api`: FastAPI backend
@@ -55,6 +58,8 @@ From repo root:
 
 You typically run **three separate processes** in parallel: API, Web, Worker.
 
+Note: the CLI currently connects directly to the DB for listing/queue commands. We may switch it to call the API instead for a stricter API-only workflow.
+
 ## Local Dev (API + Supabase)
 1. Create a Supabase project and note the database connection string.
 2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string. Supabase requires SSL, so include `sslmode=require`.
@@ -89,13 +94,6 @@ Run migrations:
 ```bash
 set -a; source ./.env; set +a
 PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
-```
-
-## Local Dev (Web)
-```bash
-cd apps/web
-npm install
-npm run dev
 ```
 
 ## Testing Automated Discovery (Developer)
@@ -179,6 +177,14 @@ Configuration notes:
 - Example: Greenhouse `default_config` includes `board_tokens: ["company_token"]`
 - Example: Lever `default_config` includes `companies: ["company_name"]`
 
+## Supabase Auth (JWKS) Setup
+1. In Supabase, go to Project Settings -> API and note:
+   - Project ref
+   - JWKS URL
+2. Set `SUPABASE_PROJECT_REF` in `.env`.
+3. The API will use the JWKS URL derived from `SUPABASE_PROJECT_REF` to verify tokens (ES256).
+4. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
+
 ## First-Time Setup Checklist
 Accounts / services:
 - Supabase (Postgres + Auth)
@@ -192,10 +198,3 @@ Environment variables to set in `.env`:
 - `API_PORT` (optional)
 - `API_ENV` (optional)
 - `VITE_API_BASE_URL` (for web)
-
-## Alembic
-```bash
-export DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/job_culler
-PYTHONPATH=packages alembic -c packages/db/alembic.ini revision --autogenerate -m "init"
-PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
-```

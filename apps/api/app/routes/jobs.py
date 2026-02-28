@@ -8,12 +8,6 @@ from db.models import ManualSubmission, WorkflowQueue
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
-@router.get("")
-def list_jobs(db: Session = Depends(get_db), user=RequireUser):
-    # TODO: query jobs table
-    return {"items": [], "count": 0}
-
-
 @router.post("/manual")
 def submit_manual_url(payload: dict, db: Session = Depends(get_db), user=RequireUser):
     url = payload.get("url")
