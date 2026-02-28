@@ -31,6 +31,12 @@ export $(cat ../../.env | xargs)
 # Run API
 PYTHONPATH=../../packages uvicorn app.main:app --reload --port 8000
 ```
+Note: the API server must be running for the web UI and worker CLI to work.
+
+## Run Order (Local)
+1. Start the API server.
+2. Start the web UI (optional).
+3. Run the worker loop when you want ingestion to process queued tasks.
 
 ## Local Dev (API + Supabase)
 1. Create a Supabase project and note the database connection string.

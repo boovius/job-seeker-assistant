@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
@@ -10,14 +12,34 @@ from app.services.sources import to_registry_entry
 from db.models import Job, Source, SourceCursor, UserSource, WorkflowQueue
 
 
-def fetch_next_task(db: Session) -> WorkflowQueue | None:
+def claim_next_task(db: Session, lease_minutes: int = 5) -> WorkflowQueue | None:
+    now = datetime.now(timezone.utc)
     stmt = (
         select(WorkflowQueue)
-        .where(WorkflowQueue.status == "queued")
+        .where(
+            (WorkflowQueue.status == "queued")
+            | (
+                (WorkflowQueue.status == "leased")
+                & (WorkflowQueue.lease_expires_at.isnot(None))
+                & (WorkflowQueue.lease_expires_at < now)
+            )
+        )
         .order_by(WorkflowQueue.created_at.asc())
         .limit(1)
+        .with_for_update(skip_locked=True)
     )
-    return db.execute(stmt).scalars().first()
+    task = db.execute(stmt).scalars().first()
+    if not task:
+        return None
+
+    task.status = "leased"
+    task.lease_expires_at = now + timedelta(minutes=lease_minutes)
+    task.attempts = (task.attempts or 0) + 1
+    task.started_at = now
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return task
 
 
 def _get_source_context(db: Session, source_id: str, user_id: str):
@@ -85,98 +107,93 @@ def _upsert_job(db: Session, job: dict) -> None:
 def run_once() -> None:
     db = SessionLocal()
     try:
-        task = fetch_next_task(db)
+        task = claim_next_task(db)
         if not task:
             return
-
-        task.status = "running"
-        db.add(task)
-        db.commit()
 
         payload = task.payload or {}
         task_type = task.task_type
 
-        if task_type == "fetch_listings":
-            source_id = payload.get("source_id")
-            user_id = payload.get("user_id")
-            if not source_id or not user_id:
-                task.status = "failed"
+        try:
+            if task_type == "fetch_listings":
+                source_id = payload.get("source_id")
+                user_id = payload.get("user_id")
+                if not source_id or not user_id:
+                    raise ValueError("Missing source_id or user_id")
+
+                source, user_source = _get_source_context(db, source_id, user_id)
+                if not source:
+                    raise ValueError("Unknown source")
+
+                registry = to_registry_entry(source, user_source)
+                adapter = get_adapter(source.adapter)
+                cursor = _get_cursor(db, source_id, user_id)
+                listings, updated = adapter.fetch_listings(registry, FetchCursor(cursor.state or {}))
+
+                for listing in listings:
+                    _enqueue_fetch_detail(db, listing, source_id, user_id)
+
+                cursor.cursor = updated.state
+                db.add(cursor)
+                task.status = "succeeded"
+                task.finished_at = datetime.now(timezone.utc)
                 db.commit()
                 return
 
-            source, user_source = _get_source_context(db, source_id, user_id)
-            if not source:
-                task.status = "failed"
+            if task_type == "fetch_detail":
+                source_id = payload.get("source_id")
+                user_id = payload.get("user_id")
+                listing_payload = payload.get("listing") or {}
+                if not source_id or not user_id or not listing_payload:
+                    raise ValueError("Missing source_id, user_id, or listing payload")
+
+                source, user_source = _get_source_context(db, source_id, user_id)
+                if not source:
+                    raise ValueError("Unknown source")
+
+                registry = to_registry_entry(source, user_source)
+                adapter = get_adapter(source.adapter)
+
+                listing = RawListing(
+                    source_slug=registry.slug,
+                    discovered_at=None,
+                    url=listing_payload.get("url", ""),
+                    external_id=listing_payload.get("external_id"),
+                    title_hint=listing_payload.get("title_hint"),
+                    company_hint=listing_payload.get("company_hint"),
+                    location_hint=listing_payload.get("location_hint"),
+                    posted_at_hint=None,
+                    raw_payload=listing_payload.get("raw_payload"),
+                )
+                detail = adapter.fetch_job_detail(listing, registry)
+                normalized = adapter.normalize(detail, listing)
+
+                _upsert_job(
+                    db,
+                    {
+                        "canonical_url": normalized.canonical_url,
+                        "title": normalized.title,
+                        "company_name": normalized.company_name,
+                        "location": normalized.location,
+                        "remote_flag": normalized.remote_flag,
+                        "description": normalized.description_text,
+                        "source_type": "auto",
+                        "date_posted": normalized.date_posted,
+                        "status": "new",
+                    },
+                )
+
+                task.status = "succeeded"
+                task.finished_at = datetime.now(timezone.utc)
                 db.commit()
                 return
 
-            registry = to_registry_entry(source, user_source)
-            adapter = get_adapter(source.adapter)
-            cursor = _get_cursor(db, source_id, user_id)
-            listings, updated = adapter.fetch_listings(registry, FetchCursor(cursor.state or {}))
-
-            for listing in listings:
-                _enqueue_fetch_detail(db, listing, source_id, user_id)
-
-            cursor.cursor = updated.state
-            db.add(cursor)
-            task.status = "succeeded"
+            raise ValueError(f"Unknown task_type: {task_type}")
+        except Exception as exc:  # pragma: no cover - runner logs later
+            task.status = "failed"
+            task.last_error = str(exc)
+            task.finished_at = datetime.now(timezone.utc)
             db.commit()
-            return
-
-        if task_type == "fetch_detail":
-            source_id = payload.get("source_id")
-            user_id = payload.get("user_id")
-            listing_payload = payload.get("listing") or {}
-            if not source_id or not user_id or not listing_payload:
-                task.status = "failed"
-                db.commit()
-                return
-
-            source, user_source = _get_source_context(db, source_id, user_id)
-            if not source:
-                task.status = "failed"
-                db.commit()
-                return
-
-            registry = to_registry_entry(source, user_source)
-            adapter = get_adapter(source.adapter)
-
-            listing = RawListing(
-                source_slug=registry.slug,
-                discovered_at=None,
-                url=listing_payload.get("url", ""),
-                external_id=listing_payload.get("external_id"),
-                title_hint=listing_payload.get("title_hint"),
-                company_hint=listing_payload.get("company_hint"),
-                location_hint=listing_payload.get("location_hint"),
-                posted_at_hint=None,
-                raw_payload=listing_payload.get("raw_payload"),
-            )
-            detail = adapter.fetch_job_detail(listing, registry)
-            normalized = adapter.normalize(detail, listing)
-
-            _upsert_job(
-                db,
-                {
-                    "canonical_url": normalized.canonical_url,
-                    "title": normalized.title,
-                    "company_name": normalized.company_name,
-                    "location": normalized.location,
-                    "remote_flag": normalized.remote_flag,
-                    "description": normalized.description_text,
-                    "source_type": "auto",
-                    "date_posted": normalized.date_posted,
-                    "status": "new",
-                },
-            )
-
-            task.status = "succeeded"
-            db.commit()
-            return
-
-        task.status = "failed"
-        db.commit()
     finally:
         db.close()
 
