@@ -63,6 +63,22 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text())
 
 
+def _merge_secret_config(slug: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(cfg)
+    if slug == "adzuna":
+        app_id = os.getenv("ADZUNA_APP_ID")
+        app_key = os.getenv("ADZUNA_APP_KEY")
+        if app_id:
+            merged["app_id"] = app_id
+        if app_key:
+            merged["app_key"] = app_key
+    if slug == "jooble":
+        api_key = os.getenv("JOOBLE_API_KEY")
+        if api_key:
+            merged["api_key"] = api_key
+    return merged
+
+
 def main() -> None:
     database_url = _get_env("DATABASE_URL")
     user_id = _get_env("SUPABASE_USER_ID")
@@ -82,6 +98,8 @@ def main() -> None:
             cfg = entry.get("config", {})
             if not adapter or not kind:
                 raise RuntimeError(f"Missing adapter/kind for source {slug}")
+
+            cfg = _merge_secret_config(slug, cfg)
 
             source = _upsert_source(
                 db,

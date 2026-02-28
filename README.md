@@ -173,18 +173,23 @@ curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
 4. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
 
 ## Automated Discovery Sources (Phase 1)
-We currently support Greenhouse, Lever, and Remotive adapters. Greenhouse/Lever use company slugs; Remotive supports keyword/category discovery.
+We currently support Greenhouse, Lever, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Remotive/Adzuna/Jooble support keyword discovery.
 
 Examples:
 - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`
 - Lever: `https://api.lever.co/v0/postings/{company}`
 - Remotive: `https://remotive.com/api/remote-jobs?search={keyword}`
+- Adzuna: `https://api.adzuna.com/v1/api/jobs/{country}/search/1?what={keyword}`
+- Jooble: `https://jooble.org/api/{api_key}` (POST body includes keywords)
 
 Configuration notes:
-- Store identifiers in `sources.default_config`.
-- Greenhouse `default_config` includes `board_tokens: ["company_token"]`
-- Lever `default_config` includes `companies: ["company_name"]`
-- Remotive `default_config` includes `keywords: ["technical product manager", "climate"]` and optional `categories`.
+- Source settings live in `config/sources.yaml`.
+- Secrets (Adzuna/Jooble keys) are read from `.env` and merged at seed time.
+- Greenhouse `config` includes `board_tokens: ["company_token"]`
+- Lever `config` includes `companies: ["company_name"]`
+- Remotive `config` includes `keywords: ["technical product manager", "climate"]`
+- Adzuna `config` includes `country`, `keywords`, `results_per_page`
+- Jooble `config` includes `location`, `keywords`, `page`
 
 ## First-Time Setup Checklist
 Accounts / services:

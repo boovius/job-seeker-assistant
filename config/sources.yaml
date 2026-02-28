@@ -28,3 +28,27 @@ sources:
         - technical product manager
         - climate
       categories: []
+
+  adzuna:
+    adapter: adzuna_api_v1
+    kind: job_board
+    base_url: https://api.adzuna.com
+    enabled: false
+    config:
+      country: us
+      keywords:
+        - technical product manager
+        - climate
+      results_per_page: 50
+
+  jooble:
+    adapter: jooble_api_v1
+    kind: job_board
+    base_url: https://jooble.org
+    enabled: false
+    config:
+      location: United States
+      keywords:
+        - technical product manager
+        - climate
+      page: 1
