@@ -24,6 +24,7 @@ export function App() {
   const [jobsError, setJobsError] = useState<string | null>(null);
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [queueError, setQueueError] = useState<string | null>(null);
+  const [loadingQueue, setLoadingQueue] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,6 +40,19 @@ export function App() {
     }
   }
 
+  async function loadQueue(failedOnly = false) {
+    setLoadingQueue(true);
+    try {
+      const res = await listQueue(failedOnly);
+      setQueue(res.items);
+      setQueueError(null);
+    } catch (err) {
+      setQueueError("Unable to load queue");
+    } finally {
+      setLoadingQueue(false);
+    }
+  }
+
   useEffect(() => {
     listJobs()
       .then((res) => setJobs(res.items))
@@ -46,9 +60,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    listQueue(true)
-      .then((res) => setQueue(res.items))
-      .catch(() => setQueueError("Unable to load queue"));
+    loadQueue(true);
   }, []);
 
   return (
@@ -92,9 +104,18 @@ export function App() {
 
       <hr style={{ margin: "32px 0" }} />
 
-      <h2>Failed Queue Items</h2>
+      <h2>Queue Status</h2>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+        <button type="button" onClick={() => loadQueue(false)} disabled={loadingQueue}>
+          {loadingQueue ? "Loading..." : "Refresh All"}
+        </button>
+        <button type="button" onClick={() => loadQueue(true)} disabled={loadingQueue}>
+          {loadingQueue ? "Loading..." : "Refresh Failed"}
+        </button>
+      </div>
+
       {queueError && <p>{queueError}</p>}
-      {!queueError && queue.length === 0 && <p>No failed queue items.</p>}
+      {!queueError && queue.length === 0 && <p>No queue items.</p>}
       <ul>
         {queue.map((item) => (
           <li key={item.id}>
