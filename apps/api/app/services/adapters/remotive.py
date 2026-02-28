@@ -6,6 +6,7 @@ from typing import Any
 import httpx
 
 from app.services.adapters.base import FetchCursor, NormalizedJob, RawJobDetail, RawListing, SourceAdapter, SourceRegistryEntry
+from app.services.adapters.query_utils import build_queries
 
 
 class RemotiveAdapter(SourceAdapter):
@@ -22,24 +23,29 @@ class RemotiveAdapter(SourceAdapter):
         base_url = registry.config.get("endpoint", "https://remotive.com/api/remote-jobs")
         keywords = registry.config.get("keywords", [])
         categories = registry.config.get("categories", [])
+        profiles = build_queries(registry.config)
 
         listings: list[RawListing] = []
         now = datetime.now(timezone.utc)
 
-        # Fetch once with no filters if none provided
-        if not keywords and not categories:
+        # Profile-based keyword searches
+        if profiles:
+            for profile in profiles:
+                query = profile.get("keywords", "")
+                if not query:
+                    continue
+                payload = self._fetch(base_url, {"search": query})
+                listings.extend(self._to_listings(payload, now))
+        elif keywords or categories:
+            for kw in keywords:
+                payload = self._fetch(base_url, {"search": kw})
+                listings.extend(self._to_listings(payload, now))
+
+            for cat in categories:
+                payload = self._fetch(base_url, {"category": cat})
+                listings.extend(self._to_listings(payload, now))
+        else:
             payload = self._fetch(base_url, {})
-            listings.extend(self._to_listings(payload, now))
-            return listings, cursor
-
-        # Keyword searches
-        for kw in keywords:
-            payload = self._fetch(base_url, {"search": kw})
-            listings.extend(self._to_listings(payload, now))
-
-        # Category filters
-        for cat in categories:
-            payload = self._fetch(base_url, {"category": cat})
             listings.extend(self._to_listings(payload, now))
 
         # Deduplicate by URL

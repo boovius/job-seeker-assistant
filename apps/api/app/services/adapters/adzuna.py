@@ -6,6 +6,7 @@ from typing import Any
 import httpx
 
 from app.services.adapters.base import FetchCursor, NormalizedJob, RawJobDetail, RawListing, SourceAdapter, SourceRegistryEntry
+from app.services.adapters.query_utils import build_queries
 
 
 class AdzunaAdapter(SourceAdapter):
@@ -24,6 +25,7 @@ class AdzunaAdapter(SourceAdapter):
         country = registry.config.get("country", "us")
         keywords = registry.config.get("keywords", [])
         results_per_page = registry.config.get("results_per_page", 50)
+        profiles = build_queries(registry.config)
 
         if not app_id or not app_key:
             raise ValueError("Missing Adzuna app_id/app_key")
@@ -31,15 +33,21 @@ class AdzunaAdapter(SourceAdapter):
         listings: list[RawListing] = []
         now = datetime.now(timezone.utc)
 
-        for kw in keywords or [""]:
+        query_sets = profiles or [{"keywords": " ".join(keywords)}]
+
+        for qs in query_sets:
             params = {
                 "app_id": app_id,
                 "app_key": app_key,
                 "results_per_page": results_per_page,
                 "content-type": "application/json",
             }
+            kw = qs.get("keywords")
             if kw:
                 params["what"] = kw
+            where = qs.get("location")
+            if where:
+                params["where"] = where
 
             url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
             resp = self.client.get(url, params=params)

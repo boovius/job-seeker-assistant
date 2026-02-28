@@ -24,9 +24,13 @@ sources:
     enabled: true
     config:
       endpoint: https://remotive.com/api/remote-jobs
-      keywords:
-        - technical product manager
-        - climate
+      search_profiles:
+        - role_keywords:
+            - technical product manager
+          sector_keywords:
+            - climate
+          location: Los Angeles, CA
+          remote: true
       categories: []
 
   adzuna:
@@ -36,10 +40,14 @@ sources:
     enabled: false
     config:
       country: us
-      keywords:
-        - technical product manager
-        - climate
       results_per_page: 50
+      search_profiles:
+        - role_keywords:
+            - technical product manager
+          sector_keywords:
+            - climate
+          location: Los Angeles, CA
+          remote: true
 
   jooble:
     adapter: jooble_api_v1
@@ -48,7 +56,11 @@ sources:
     enabled: false
     config:
       location: United States
-      keywords:
-        - technical product manager
-        - climate
       page: 1
+      search_profiles:
+        - role_keywords:
+            - technical product manager
+          sector_keywords:
+            - climate
+          location: Los Angeles, CA
+          remote: true

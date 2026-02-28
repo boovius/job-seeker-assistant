@@ -6,6 +6,7 @@ from typing import Any
 import httpx
 
 from app.services.adapters.base import FetchCursor, NormalizedJob, RawJobDetail, RawListing, SourceAdapter, SourceRegistryEntry
+from app.services.adapters.query_utils import build_queries
 
 
 class JoobleAdapter(SourceAdapter):
@@ -21,8 +22,9 @@ class JoobleAdapter(SourceAdapter):
     ) -> tuple[list[RawListing], FetchCursor]:
         api_key = registry.config.get("api_key")
         keywords = registry.config.get("keywords", [])
-        location = registry.config.get("location")
+        location_default = registry.config.get("location")
         page = registry.config.get("page", 1)
+        profiles = build_queries(registry.config)
 
         if not api_key:
             raise ValueError("Missing Jooble api_key")
@@ -30,10 +32,13 @@ class JoobleAdapter(SourceAdapter):
         listings: list[RawListing] = []
         now = datetime.now(timezone.utc)
 
-        for kw in keywords or [""]:
-            payload = {"keywords": kw, "page": page}
-            if location:
-                payload["location"] = location
+        query_sets = profiles or [{"keywords": " ".join(keywords), "location": location_default}]
+
+        for qs in query_sets:
+            payload = {"keywords": qs.get("keywords", ""), "page": page}
+            loc = qs.get("location") or location_default
+            if loc:
+                payload["location"] = loc
 
             url = f"https://jooble.org/api/{api_key}"
             resp = self.client.post(url, json=payload)

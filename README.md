@@ -97,7 +97,7 @@ PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
 ```
 
 ## Source Configuration (YAML)
-Source settings now live in `config/sources.yaml` (instead of env vars). Update it to control keywords and enabled sources.
+Source settings now live in `config/sources.yaml` (instead of env vars). Update it to control search profiles (role + sector + location) and enabled sources.
 
 Override the file path via:
 ```
@@ -108,7 +108,7 @@ SOURCES_CONFIG=/path/to/sources.yaml
 1. Set env vars in `.env`:
    - `DATABASE_URL`
    - `SUPABASE_USER_ID`
-2. Edit `config/sources.yaml` with your desired sources and keywords.
+2. Edit `config/sources.yaml` with your desired sources and search profiles.
 3. Seed sources for your user:
 ```bash
 export $(cat ./.env | xargs)
@@ -129,7 +129,7 @@ curl -X POST http://localhost:8000/sources/upsert \
     "adapter": "remotive_api_v1",
     "kind": "job_board",
     "base_url": "https://remotive.com",
-    "default_config": {"keywords": ["technical product manager", "climate"]}
+    "default_config": {"search_profiles": [{"role_keywords": ["technical product manager"], "sector_keywords": ["climate"], "location": "Los Angeles, CA"}]}
   }'
 ```
 5. Enqueue a fetch:
@@ -185,11 +185,7 @@ Examples:
 Configuration notes:
 - Source settings live in `config/sources.yaml`.
 - Secrets (Adzuna/Jooble keys) are read from `.env` and merged at seed time.
-- Greenhouse `config` includes `board_tokens: ["company_token"]`
-- Lever `config` includes `companies: ["company_name"]`
-- Remotive `config` includes `keywords: ["technical product manager", "climate"]`
-- Adzuna `config` includes `country`, `keywords`, `results_per_page`
-- Jooble `config` includes `location`, `keywords`, `page`
+- Use `search_profiles` to combine role + sector keywords with an optional location.
 
 ## First-Time Setup Checklist
 Accounts / services:
