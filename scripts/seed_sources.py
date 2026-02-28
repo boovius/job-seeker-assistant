@@ -65,6 +65,8 @@ def main() -> None:
 
     greenhouse_tokens = _split_csv(os.getenv("GREENHOUSE_BOARD_TOKENS"))
     lever_companies = _split_csv(os.getenv("LEVER_COMPANIES"))
+    remotive_keywords = _split_csv(os.getenv("REMOTIVE_KEYWORDS"))
+    remotive_categories = _split_csv(os.getenv("REMOTIVE_CATEGORIES"))
 
     engine = create_engine(database_url, pool_pre_ping=True)
 
@@ -85,9 +87,22 @@ def main() -> None:
             base_url="https://jobs.lever.co",
             default_config={"companies": lever_companies},
         )
+        remotive = _upsert_source(
+            db,
+            slug="remotive",
+            adapter="remotive_api_v1",
+            kind="job_board",
+            base_url="https://remotive.com",
+            default_config={
+                "endpoint": "https://remotive.com/api/remote-jobs",
+                "keywords": remotive_keywords,
+                "categories": remotive_categories,
+            },
+        )
 
         _ensure_user_source(db, user_id, greenhouse)
         _ensure_user_source(db, user_id, lever)
+        _ensure_user_source(db, user_id, remotive)
 
         db.commit()
         print("Seeded sources for user", user_id)

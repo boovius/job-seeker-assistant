@@ -166,16 +166,18 @@ curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
 4. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
 
 ## Automated Discovery Sources (Phase 1)
-We currently support Greenhouse and Lever adapters. These are public job board endpoints and do not require API keys for reading job listings. You will need each company's board token (Greenhouse) or account name (Lever) to query their postings.
+We currently support Greenhouse, Lever, and Remotive adapters. Greenhouse/Lever use company slugs; Remotive supports keyword/category discovery.
 
 Examples:
 - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`
 - Lever: `https://api.lever.co/v0/postings/{company}`
+- Remotive: `https://remotive.com/api/remote-jobs?search={keyword}`
 
 Configuration notes:
-- Store these identifiers in the `sources.default_config` JSON for each source.
-- Example: Greenhouse `default_config` includes `board_tokens: ["company_token"]`
-- Example: Lever `default_config` includes `companies: ["company_name"]`
+- Store identifiers in `sources.default_config`.
+- Greenhouse `default_config` includes `board_tokens: ["company_token"]`
+- Lever `default_config` includes `companies: ["company_name"]`
+- Remotive `default_config` includes `keywords: ["technical product manager", "climate"]` and optional `categories`.
 
 ## Supabase Auth (JWKS) Setup
 1. In Supabase, go to Project Settings -> API and note:
