@@ -98,6 +98,22 @@ flowchart LR
   E --> DB
 ```
 
+## Runtime Processes
+
+- API server: serves HTTP endpoints for UI/CLI and writes to the workflow queue.
+- Web UI: optional client for manual intake and job review.
+- Worker process: continuously claims tasks from the queue and executes adapters/enrichment.
+
+## Scripts Directory (Purpose)
+
+- `scripts/start_api.sh`: bootstraps venv, installs deps, runs API server.
+- `scripts/start_web.sh`: installs web deps and runs Vite dev server.
+- `scripts/start_worker.sh`: runs the worker loop (calls CLI).
+- `scripts/cli.py`: developer CLI wrapper for seed/enqueue/run-worker.
+- `scripts/run_worker.py`: worker loop implementation.
+- `scripts/seed_sources.py`: seed sources and user_sources.
+- `scripts/enqueue_all_sources.py`: enqueue fetches for all enabled sources.
+
 ## Phase Roadmap (Aligned to Current Scaffold)
 
 Phase 1 (Current)

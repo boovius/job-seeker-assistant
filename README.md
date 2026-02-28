@@ -46,6 +46,13 @@ From repo root:
 ./scripts/start_worker.sh
 ```
 
+## Processes (Local)
+- API server (`uvicorn`) — serves HTTP endpoints used by the UI and CLI.
+- Web UI (`vite`) — optional; provides manual URL intake and job list.
+- Worker loop — separate process that pulls tasks from `workflow_queue` and processes them.
+
+You typically run **three separate processes** in parallel: API, Web, Worker.
+
 ## Local Dev (API + Supabase)
 1. Create a Supabase project and note the database connection string.
 2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string. Supabase requires SSL, so include `sslmode=require`.
