@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.routes.health import router as health_router
 from app.routes.jobs import router as jobs_router
 from app.routes.jobs_list import router as jobs_list_router
@@ -15,9 +16,13 @@ from app.routes.workflows import router as workflows_router
 def create_app() -> FastAPI:
     app = FastAPI(title="Job Intelligence Agent API")
 
+    allow_origins = ["http://localhost:5173", "http://localhost:5174"]
+    if settings.api_local_debug:
+        allow_origins = ["*"]
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://localhost:5174"],
+        allow_origins=allow_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"]

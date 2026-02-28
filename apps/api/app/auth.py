@@ -24,6 +24,9 @@ def _get_bearer_token(request: Request) -> str:
 
 
 def require_user(request: Request) -> dict:
+    if settings.api_local_debug:
+        return {"sub": settings.api_local_debug_user_id, "role": "local-debug"}
+
     token = _get_bearer_token(request)
     jwks_url = _jwks_url()
 

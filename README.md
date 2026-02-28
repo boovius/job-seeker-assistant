@@ -227,4 +227,6 @@ Environment variables to set in `.env`:
 - `SUPABASE_JWT_SECRET` (deprecated once JWKS verification is wired)
 - `API_PORT` (optional)
 - `API_ENV` (optional)
+- `API_LOCAL_DEBUG` (optional; when true disables auth and opens CORS for local UI)
+- `API_LOCAL_DEBUG_USER_ID` (optional; default `local-debug-user`)
 - `VITE_API_BASE_URL` (for web)
