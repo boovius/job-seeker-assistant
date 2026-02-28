@@ -102,6 +102,31 @@ Source settings now live in `config/sources.yaml` (instead of env vars). Update 
 ## Source Config in UI
 Use the web UI to edit and save `config/sources.yaml`-style YAML. The API stores this per-user in the database and applies it to `sources`/`user_sources`.
 
+Example `config/sources.yaml`:
+```yaml
+version: 1
+
+sources:
+  remotive:
+    adapter: remotive_api_v1
+    kind: job_board
+    base_url: https://remotive.com
+    enabled: true
+    config:
+      endpoint: https://remotive.com/api/remote-jobs
+      search_profiles:
+        - role_keywords: ["technical product manager"]
+          sector_keywords: ["climate"]
+          location: Los Angeles, CA
+          remote: true
+```
+
+UI workflow:
+1. Start the API and web UI.
+2. Open the app in your browser.
+3. Paste your YAML into the “Source Config” editor.
+4. Click “Save Config”.
+
 Override the file path via:
 ```
 SOURCES_CONFIG=/path/to/sources.yaml
