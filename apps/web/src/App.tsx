@@ -122,7 +122,7 @@ export function App() {
             <strong>{item.task_type}</strong> — {item.status} (attempts: {item.attempts})
             {item.last_error ? ` — ${item.last_error}` : ""}
           </li>
-        ))
+        ))}
       </ul>
 
       <hr style={{ margin: "32px 0" }} />
@@ -135,7 +135,7 @@ export function App() {
           <li key={job.id}>
             <strong>{job.title || "Untitled Role"}</strong> — {job.company_name || "Unknown Company"} ({job.status || "new"})
           </li>
-        ))
+        ))}
       </ul>
     </div>
   );
