@@ -45,6 +45,7 @@ From repo root:
 ./scripts/start_web.sh
 ./scripts/start_worker.sh
 ./scripts/migrate.sh "init"
+./scripts/get_jwt.sh <EMAIL> <PASSWORD>
 ```
 
 ## Processes (Local)
