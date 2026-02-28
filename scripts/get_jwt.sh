@@ -24,8 +24,31 @@ if [[ -z "$PROJECT_REF" || -z "$ANON_KEY" ]]; then
   exit 1
 fi
 
-curl -s \
+RESPONSE=$(curl -s \
   -X POST "https://${PROJECT_REF}.supabase.co/auth/v1/token?grant_type=password" \
   -H "apikey: ${ANON_KEY}" \
   -H "Content-Type: application/json" \
-  -d "{\"email\":\"${EMAIL}\",\"password\":\"${PASSWORD}\"}"
+  -d "{\"email\":\"${EMAIL}\",\"password\":\"${PASSWORD}\"}")
+
+if [[ -z "$RESPONSE" ]]; then
+  echo "Empty response from Supabase Auth"
+  exit 1
+fi
+
+printf '%s' "$RESPONSE" | python - <<'PY'
+import json
+import sys
+
+raw = sys.stdin.read()
+try:
+    data = json.loads(raw)
+except json.JSONDecodeError:
+    print(raw.strip())
+    sys.exit(1)
+
+token = data.get("access_token")
+if token:
+    print(token)
+else:
+    print(raw.strip())
+PY
