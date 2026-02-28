@@ -49,6 +49,20 @@ PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
 ```
 Note: `revision --autogenerate` creates the migration file; `upgrade head` applies it to the database.
 
+## Local Dev (API + Local Postgres via Docker)
+```bash
+docker compose up -d db
+```
+Set `.env`:
+```
+DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/job_culler
+```
+Run migrations:
+```bash
+set -a; source ./.env; set +a
+PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
+```
+
 ## Local Dev (Web)
 ```bash
 cd apps/web

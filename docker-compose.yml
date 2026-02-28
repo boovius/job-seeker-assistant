@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: job_culler_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: job_culler
+    ports:
+      - "5432:5432"
+    volumes:
+      - job_culler_db_data:/var/lib/postgresql/data
+
+volumes:
+  job_culler_db_data:

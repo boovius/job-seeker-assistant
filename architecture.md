@@ -74,6 +74,19 @@ We are using SQLAlchemy + Alembic because the backend is FastAPI/Python and this
 - `packages/db`: SQLAlchemy models + Alembic migrations
 - `packages/db/alembic`: Alembic config and versions
 
+## Core Components (Mermaid)
+```mermaid
+flowchart LR
+  UI[Web UI] --> API[FastAPI API]
+  API --> DB[(Supabase / Postgres)]
+  API --> Q[Workflow Queue]
+  Q --> W[Worker Runner]
+  W --> DB
+  S[Source Adapters\n(Greenhouse, Lever, ...)] --> W
+  W --> E[Enrichment/Scoring (later)]
+  E --> DB
+```
+
 ## Phase Roadmap (Aligned to Current Scaffold)
 Phase 1 (Current)
 - Manual URL ingestion
