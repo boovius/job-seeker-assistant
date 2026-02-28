@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "apps" / "api"
 PACKAGES_PATH = ROOT / "packages"
 
-for path in (API_PATH, PACKAGES_PATH):
+for path in (ROOT, API_PATH, PACKAGES_PATH):
     if str(path) not in sys.path:
         sys.path.append(str(path))
 
