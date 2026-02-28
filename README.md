@@ -38,6 +38,14 @@ Note: the API server must be running for the web UI and worker CLI to work.
 2. Start the web UI (optional).
 3. Run the worker loop when you want ingestion to process queued tasks.
 
+## Convenience Scripts
+From repo root:
+```bash
+./scripts/start_api.sh
+./scripts/start_web.sh
+./scripts/start_worker.sh
+```
+
 ## Local Dev (API + Supabase)
 1. Create a Supabase project and note the database connection string.
 2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string. Supabase requires SSL, so include `sslmode=require`.
