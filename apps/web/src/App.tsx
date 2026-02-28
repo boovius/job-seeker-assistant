@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listJobs, submitManualUrl } from "./api";
+import { listJobs, listQueue, submitManualUrl } from "./api";
 
 type Job = {
   id: string;
@@ -8,12 +8,22 @@ type Job = {
   status?: string;
 };
 
+type QueueItem = {
+  id: string;
+  task_type: string;
+  status: string;
+  attempts: number;
+  last_error?: string | null;
+};
+
 export function App() {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobsError, setJobsError] = useState<string | null>(null);
+  const [queue, setQueue] = useState<QueueItem[]>([]);
+  const [queueError, setQueueError] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,8 +45,14 @@ export function App() {
       .catch(() => setJobsError("Unable to load jobs"));
   }, []);
 
+  useEffect(() => {
+    listQueue(true)
+      .then((res) => setQueue(res.items))
+      .catch(() => setQueueError("Unable to load queue"));
+  }, []);
+
   return (
-    <div style={{ maxWidth: 840, margin: "40px auto", fontFamily: "Georgia, serif" }}>
+    <div style={{ maxWidth: 900, margin: "40px auto", fontFamily: "Georgia, serif" }}>
       <h1>Job Intelligence Agent</h1>
       <p>Manual URL intake (Phase 1)</p>
 
@@ -76,6 +92,20 @@ export function App() {
 
       <hr style={{ margin: "32px 0" }} />
 
+      <h2>Failed Queue Items</h2>
+      {queueError && <p>{queueError}</p>}
+      {!queueError && queue.length === 0 && <p>No failed queue items.</p>}
+      <ul>
+        {queue.map((item) => (
+          <li key={item.id}>
+            <strong>{item.task_type}</strong> — {item.status} (attempts: {item.attempts})
+            {item.last_error ? ` — ${item.last_error}` : ""}
+          </li>
+        ))
+      </ul>
+
+      <hr style={{ margin: "32px 0" }} />
+
       <h2>Job List</h2>
       {jobsError && <p>{jobsError}</p>}
       {!jobsError && jobs.length === 0 && <p>No jobs yet.</p>}
@@ -84,7 +114,7 @@ export function App() {
           <li key={job.id}>
             <strong>{job.title || "Untitled Role"}</strong> — {job.company_name || "Unknown Company"} ({job.status || "new"})
           </li>
-        ))}
+        ))
       </ul>
     </div>
   );
