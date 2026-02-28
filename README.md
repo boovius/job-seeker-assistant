@@ -96,13 +96,20 @@ set -a; source ./.env; set +a
 PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
 ```
 
+## Source Configuration (YAML)
+Source settings now live in `config/sources.yaml` (instead of env vars). Update it to control keywords and enabled sources.
+
+Override the file path via:
+```
+SOURCES_CONFIG=/path/to/sources.yaml
+```
+
 ## Testing Automated Discovery (Developer)
 1. Set env vars in `.env`:
    - `DATABASE_URL`
    - `SUPABASE_USER_ID`
-   - `GREENHOUSE_BOARD_TOKENS` (comma-separated)
-   - `LEVER_COMPANIES` (comma-separated)
-2. Seed sources for your user:
+2. Edit `config/sources.yaml` with your desired sources and keywords.
+3. Seed sources for your user:
 ```bash
 export $(cat ./.env | xargs)
 PYTHONPATH=packages python scripts/seed_sources.py
@@ -112,27 +119,27 @@ Or via CLI:
 export $(cat ./.env | xargs)
 python scripts/cli.py seed-sources
 ```
-3. (Optional) Seed via API:
+4. (Optional) Seed via API:
 ```bash
 curl -X POST http://localhost:8000/sources/upsert \
   -H "Authorization: Bearer <SUPABASE_JWT>" \
   -H "Content-Type: application/json" \
   -d '{
-    "slug": "greenhouse",
-    "adapter": "greenhouse_job_board_v1",
-    "kind": "ats_api",
-    "base_url": "https://boards.greenhouse.io",
-    "default_config": {"board_tokens": ["company_token"]}
+    "slug": "remotive",
+    "adapter": "remotive_api_v1",
+    "kind": "job_board",
+    "base_url": "https://remotive.com",
+    "default_config": {"keywords": ["technical product manager", "climate"]}
   }'
 ```
-4. Enqueue a fetch:
+5. Enqueue a fetch:
 ```bash
 curl -X POST http://localhost:8000/workflows/enqueue-fetch-listings \
   -H "Authorization: Bearer <SUPABASE_JWT>" \
   -H "Content-Type: application/json" \
-  -d '{"source_slug":"greenhouse"}'
+  -d '{"source_slug":"remotive"}'
 ```
-5. Or enqueue all enabled sources for the user:
+6. Or enqueue all enabled sources for the user:
 ```bash
 export $(cat ./.env | xargs)
 PYTHONPATH=packages python scripts/enqueue_all_sources.py
@@ -142,7 +149,7 @@ Or via CLI:
 export $(cat ./.env | xargs)
 python scripts/cli.py enqueue-all
 ```
-6. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
+7. Run the worker loop (processes `fetch_listings` and `fetch_detail` tasks):
 ```bash
 export $(cat ./.env | xargs)
 python scripts/run_worker.py
@@ -152,7 +159,7 @@ Or via CLI:
 export $(cat ./.env | xargs)
 python scripts/cli.py run-worker
 ```
-7. Verify jobs are created:
+8. Verify jobs are created:
 ```bash
 curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
 ```
@@ -178,14 +185,6 @@ Configuration notes:
 - Greenhouse `default_config` includes `board_tokens: ["company_token"]`
 - Lever `default_config` includes `companies: ["company_name"]`
 - Remotive `default_config` includes `keywords: ["technical product manager", "climate"]` and optional `categories`.
-
-## Supabase Auth (JWKS) Setup
-1. In Supabase, go to Project Settings -> API and note:
-   - Project ref
-   - JWKS URL
-2. Set `SUPABASE_PROJECT_REF` in `.env`.
-3. The API will use the JWKS URL derived from `SUPABASE_PROJECT_REF` to verify tokens (ES256).
-4. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
 
 ## First-Time Setup Checklist
 Accounts / services:

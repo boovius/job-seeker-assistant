@@ -19,6 +19,10 @@ Steps:
 4. Add a "search-first" source type (aggregators/boards) for keyword discovery, then resolve canonical URLs to ATS when possible.
 5. Update dedupe rules to prioritize canonical ATS URLs when found from keyword sources.
 
+Follow-on additions:
+1. Add additional keyword sources (Adzuna, Jooble) as adapter plugins.
+2. Switch config storage from env vars to a YAML config file (with optional DB overrides).
+
 ## Major Change 2: Periodic Pipeline (Scheduled Runs)
 Goal: run the full discovery pipeline on a schedule (daily or a few times per week).
 

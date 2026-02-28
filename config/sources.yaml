@@ -1,0 +1,30 @@
+version: 1
+
+sources:
+  greenhouse:
+    adapter: greenhouse_job_board_v1
+    kind: ats_api
+    base_url: https://boards.greenhouse.io
+    enabled: true
+    config:
+      board_tokens: []
+
+  lever:
+    adapter: lever_postings_v1
+    kind: ats_api
+    base_url: https://jobs.lever.co
+    enabled: true
+    config:
+      companies: []
+
+  remotive:
+    adapter: remotive_api_v1
+    kind: job_board
+    base_url: https://remotive.com
+    enabled: true
+    config:
+      endpoint: https://remotive.com/api/remote-jobs
+      keywords:
+        - technical product manager
+        - climate
+      categories: []

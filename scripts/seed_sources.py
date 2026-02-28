@@ -1,18 +1,14 @@
 from __future__ import annotations
 
 import os
-from typing import Iterable
+from pathlib import Path
+from typing import Any
 
+import yaml
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from db.models import Source, UserSource
-
-
-def _split_csv(value: str | None) -> list[str]:
-    if not value:
-        return []
-    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 def _get_env(name: str) -> str:
@@ -45,7 +41,7 @@ def _upsert_source(db: Session, *, slug: str, adapter: str, kind: str, base_url:
     return source
 
 
-def _ensure_user_source(db: Session, user_id: str, source: Source) -> None:
+def _ensure_user_source(db: Session, user_id: str, source: Source, enabled: bool) -> None:
     existing = (
         db.execute(
             select(UserSource)
@@ -55,54 +51,47 @@ def _ensure_user_source(db: Session, user_id: str, source: Source) -> None:
         .scalar_one_or_none()
     )
     if existing:
+        existing.enabled = enabled
+        db.add(existing)
         return
-    db.add(UserSource(user_id=user_id, source_id=source.id, enabled=True, weight=1))
+    db.add(UserSource(user_id=user_id, source_id=source.id, enabled=enabled, weight=1))
+
+
+def _load_yaml(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        raise RuntimeError(f"Missing config file: {path}")
+    return yaml.safe_load(path.read_text())
 
 
 def main() -> None:
     database_url = _get_env("DATABASE_URL")
     user_id = _get_env("SUPABASE_USER_ID")
 
-    greenhouse_tokens = _split_csv(os.getenv("GREENHOUSE_BOARD_TOKENS"))
-    lever_companies = _split_csv(os.getenv("LEVER_COMPANIES"))
-    remotive_keywords = _split_csv(os.getenv("REMOTIVE_KEYWORDS"))
-    remotive_categories = _split_csv(os.getenv("REMOTIVE_CATEGORIES"))
+    config_path = Path(os.getenv("SOURCES_CONFIG", "config/sources.yaml"))
+    config = _load_yaml(config_path)
+    sources = config.get("sources", {})
 
     engine = create_engine(database_url, pool_pre_ping=True)
 
     with Session(engine) as db:
-        greenhouse = _upsert_source(
-            db,
-            slug="greenhouse",
-            adapter="greenhouse_job_board_v1",
-            kind="ats_api",
-            base_url="https://boards.greenhouse.io",
-            default_config={"board_tokens": greenhouse_tokens},
-        )
-        lever = _upsert_source(
-            db,
-            slug="lever",
-            adapter="lever_postings_v1",
-            kind="ats_api",
-            base_url="https://jobs.lever.co",
-            default_config={"companies": lever_companies},
-        )
-        remotive = _upsert_source(
-            db,
-            slug="remotive",
-            adapter="remotive_api_v1",
-            kind="job_board",
-            base_url="https://remotive.com",
-            default_config={
-                "endpoint": "https://remotive.com/api/remote-jobs",
-                "keywords": remotive_keywords,
-                "categories": remotive_categories,
-            },
-        )
+        for slug, entry in sources.items():
+            adapter = entry.get("adapter")
+            kind = entry.get("kind")
+            base_url = entry.get("base_url")
+            enabled = bool(entry.get("enabled", True))
+            cfg = entry.get("config", {})
+            if not adapter or not kind:
+                raise RuntimeError(f"Missing adapter/kind for source {slug}")
 
-        _ensure_user_source(db, user_id, greenhouse)
-        _ensure_user_source(db, user_id, lever)
-        _ensure_user_source(db, user_id, remotive)
+            source = _upsert_source(
+                db,
+                slug=slug,
+                adapter=adapter,
+                kind=kind,
+                base_url=base_url,
+                default_config=cfg,
+            )
+            _ensure_user_source(db, user_id, source, enabled)
 
         db.commit()
         print("Seeded sources for user", user_id)
