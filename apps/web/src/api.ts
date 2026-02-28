@@ -50,3 +50,34 @@ export async function listQueue(failedOnly = false) {
 
   return res.json() as Promise<{ items: Array<{ id: string; task_type: string; status: string; attempts: number; last_error?: string | null }>; count: number }>;
 }
+
+export async function getSourceConfig() {
+  const res = await fetch(`${baseUrl}/source-config`, {
+    headers: {
+      Authorization: authHeader()
+    }
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<{ yaml: string; source: string }>;
+}
+
+export async function updateSourceConfig(yaml: string) {
+  const res = await fetch(`${baseUrl}/source-config`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authHeader()
+    },
+    body: JSON.stringify({ yaml })
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json();
+}

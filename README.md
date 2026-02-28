@@ -99,6 +99,9 @@ PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
 ## Source Configuration (YAML)
 Source settings now live in `config/sources.yaml` (instead of env vars). Update it to control search profiles (role + sector + location) and enabled sources.
 
+## Source Config in UI
+Use the web UI to edit and save `config/sources.yaml`-style YAML. The API stores this per-user in the database and applies it to `sources`/`user_sources`.
+
 Override the file path via:
 ```
 SOURCES_CONFIG=/path/to/sources.yaml
@@ -183,8 +186,8 @@ Examples:
 - Jooble: `https://jooble.org/api/{api_key}` (POST body includes keywords)
 
 Configuration notes:
-- Source settings live in `config/sources.yaml`.
-- Secrets (Adzuna/Jooble keys) are read from `.env` and merged at seed time.
+- Source settings live in `config/sources.yaml` or the DB-backed UI editor.
+- Secrets (Adzuna/Jooble keys) are read from `.env` and merged at save/seed time.
 - Use `search_profiles` to combine role + sector keywords with an optional location.
 
 ## First-Time Setup Checklist

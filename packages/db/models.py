@@ -132,3 +132,14 @@ class SourceCursor(Base):
     etag = Column(Text, nullable=True)
     last_modified = Column(Text, nullable=True)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class UserSourceConfig(Base):
+    __tablename__ = "user_source_configs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False, unique=True)
+    yaml_text = Column(Text, nullable=False)
+    config_json = Column(JSONB, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listJobs, listQueue, submitManualUrl } from "./api";
+import { getSourceConfig, listJobs, listQueue, submitManualUrl, updateSourceConfig } from "./api";
 
 type Job = {
   id: string;
@@ -25,6 +25,8 @@ export function App() {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [queueError, setQueueError] = useState<string | null>(null);
   const [loadingQueue, setLoadingQueue] = useState(false);
+  const [configText, setConfigText] = useState("");
+  const [configStatus, setConfigStatus] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -53,6 +55,26 @@ export function App() {
     }
   }
 
+  async function loadConfig() {
+    try {
+      const res = await getSourceConfig();
+      setConfigText(res.yaml);
+      setConfigStatus(`Loaded config from ${res.source}`);
+    } catch (err) {
+      setConfigStatus("Failed to load config");
+    }
+  }
+
+  async function saveConfig() {
+    setConfigStatus("Saving...");
+    try {
+      await updateSourceConfig(configText);
+      setConfigStatus("Saved");
+    } catch (err) {
+      setConfigStatus("Save failed");
+    }
+  }
+
   useEffect(() => {
     listJobs()
       .then((res) => setJobs(res.items))
@@ -63,8 +85,12 @@ export function App() {
     loadQueue(true);
   }, []);
 
+  useEffect(() => {
+    loadConfig();
+  }, []);
+
   return (
-    <div style={{ maxWidth: 900, margin: "40px auto", fontFamily: "Georgia, serif" }}>
+    <div style={{ maxWidth: 980, margin: "40px auto", fontFamily: "Georgia, serif" }}>
       <h1>Job Intelligence Agent</h1>
       <p>Manual URL intake (Phase 1)</p>
 
@@ -101,6 +127,25 @@ export function App() {
       </form>
 
       {status && <p style={{ marginTop: 16 }}>{status}</p>}
+
+      <hr style={{ margin: "32px 0" }} />
+
+      <h2>Source Config</h2>
+      <p style={{ color: "#555" }}>Edit YAML to change keyword profiles and enabled sources.</p>
+      <textarea
+        value={configText}
+        onChange={(e) => setConfigText(e.target.value)}
+        style={{ width: "100%", minHeight: 240, padding: 10, fontFamily: "monospace" }}
+      />
+      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+        <button type="button" onClick={saveConfig}>
+          Save Config
+        </button>
+        <button type="button" onClick={loadConfig}>
+          Reload Config
+        </button>
+        {configStatus && <span>{configStatus}</span>}
+      </div>
 
       <hr style={{ margin: "32px 0" }} />
 

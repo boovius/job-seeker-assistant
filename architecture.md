@@ -114,6 +114,21 @@ flowchart LR
 - `scripts/seed_sources.py`: seed sources and user_sources.
 - `scripts/enqueue_all_sources.py`: enqueue fetches for all enabled sources.
 
+## Keyword Search Profiles
+We use `search_profiles` in `config/sources.yaml` or DB-backed user config to build compound keyword searches across sources. Each profile includes role keywords, sector keywords, and optional location/remote hints. Adapters map these to source-specific query parameters (e.g., Adzuna `what` + `where`, Jooble `keywords` + `location`).
+
+Example profile:
+```yaml
+search_profiles:
+  - role_keywords: ["technical product manager"]
+    sector_keywords: ["climate"]
+    location: Los Angeles, CA
+    remote: true
+```
+
+## DB-backed Source Config
+User-configurable source config is stored in the database and editable via the UI. The API loads and applies this config to `sources` and `user_sources` records, merging secrets from `.env` for providers that require API keys.
+
 ## Phase Roadmap (Aligned to Current Scaffold)
 
 Phase 1 (Current)
