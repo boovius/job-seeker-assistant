@@ -44,6 +44,7 @@ From repo root:
 ./scripts/start_api.sh
 ./scripts/start_web.sh
 ./scripts/start_worker.sh
+./scripts/migrate.sh "init"
 ```
 
 ## Processes (Local)
