@@ -204,6 +204,7 @@ Use your system cron to run the full pipeline on a cadence. Example (daily at 6a
 ```
 Notes:
 - Adjust `--max-cycles` and `WORKER_POLL_SECONDS` based on how long you want the worker to run.
+- Each cycle runs one `run_once()` then sleeps for `WORKER_POLL_SECONDS` (default 5s).
 - This is a local-only scheduler; hosted scheduling can be added later.
 
 ## Supabase Auth (JWKS) Setup

@@ -17,13 +17,15 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Job Intelligence Agent API")
 
     allow_origins = ["http://localhost:5173", "http://localhost:5174"]
+    allow_credentials = True
     if settings.api_local_debug:
         allow_origins = ["*"]
+        allow_credentials = False
 
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allow_origins,
-        allow_credentials=True,
+        allow_credentials=allow_credentials,
         allow_methods=["*"],
         allow_headers=["*"]
     )
