@@ -187,10 +187,24 @@ Or via CLI:
 export $(cat ./.env | xargs)
 python scripts/cli.py run-worker
 ```
-8. Verify jobs are created:
+8. Or run a full local pipeline (enqueue + worker) in one command:
+```bash
+export $(cat ./.env | xargs)
+python scripts/cli.py run-pipeline --max-cycles 20
+```
+9. Verify jobs are created:
 ```bash
 curl -H "Authorization: Bearer <SUPABASE_JWT>" http://localhost:8000/jobs
 ```
+
+## Local Scheduling (Option 1)
+Use your system cron to run the full pipeline on a cadence. Example (daily at 6am):
+```bash
+0 6 * * * cd /path/to/job-culler && export $(cat ./.env | xargs) && python scripts/cli.py run-pipeline --max-cycles 20 >> ./pipeline.log 2>&1
+```
+Notes:
+- Adjust `--max-cycles` and `WORKER_POLL_SECONDS` based on how long you want the worker to run.
+- This is a local-only scheduler; hosted scheduling can be added later.
 
 ## Supabase Auth (JWKS) Setup
 1. In Supabase, go to Project Settings -> API and note:

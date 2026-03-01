@@ -49,6 +49,19 @@ def run_worker_cmd(poll_seconds: int | None, max_cycles: int | None) -> None:
     run_worker_main()
 
 
+@cli.command("run-pipeline")
+@click.option("--poll-seconds", type=int, default=None)
+@click.option("--max-cycles", type=int, default=None)
+def run_pipeline_cmd(poll_seconds: int | None, max_cycles: int | None) -> None:
+    """Enqueue all sources, then run the worker loop."""
+    enqueue_all_main()
+    if poll_seconds is not None:
+        os.environ["WORKER_POLL_SECONDS"] = str(poll_seconds)
+    if max_cycles is not None:
+        os.environ["WORKER_MAX_CYCLES"] = str(max_cycles)
+    run_worker_main()
+
+
 @cli.command("list-sources")
 def list_sources_cmd() -> None:
     """List sources from the database."""

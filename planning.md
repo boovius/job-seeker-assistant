@@ -26,17 +26,25 @@ Follow-on additions:
 ## Major Change 2: Periodic Pipeline (Scheduled Runs)
 Goal: run the full discovery pipeline on a schedule (daily or a few times per week).
 
+Scheduling options (summary):
+1. Option 1: Local scheduler (CLI + cron).
+   Pros: fast to implement, easy to test, minimal infra.
+   Cons: schedule lives outside the app, no central audit, not hosted.
+2. Option 2: Render Cron Job (HTTP trigger).
+   Pros: hosted schedule, simple trigger.
+   Cons: Render-specific, no per-user cadence without DB logic, limited audit.
+3. Option 3: DB-backed schedule (policy in DB + trigger).
+   Pros: central/auditable, multi-user, UI-configurable later.
+   Cons: more schema/code, still needs a trigger.
+
+Chosen now: Option 1 (local scheduler). Option 2/3 can be layered later.
+
 Steps:
-1. Add a `pipeline_runs` table (run id, started_at, finished_at, status, summary).
-2. Add a single API endpoint to kick off a full run (enqueue fetch_listings for all enabled sources).
-3. Implement a top-level runner that:
-   - starts a run
-   - enqueues tasks for all enabled sources
-   - waits for completion or returns a run id for monitoring
-4. Add a scheduler (Render Cron) that calls the kickoff endpoint on a cadence (daily / 3x weekly).
-5. Add observability:
-   - list recent runs + counts (queued/succeeded/failed)
-   - alert on repeated failures (email/Slack later)
+1. Add a `run-pipeline` CLI command that enqueues all sources then runs the worker loop.
+2. Document a local cron example that runs `python scripts/cli.py run-pipeline`.
+3. (Later) add `pipeline_runs` table for audit and run summaries.
+4. (Later) add an API endpoint to kick off a full run.
+5. (Later) add Render Cron or a scheduler service to trigger the endpoint.
 
 ## Notes
 

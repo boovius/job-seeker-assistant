@@ -104,6 +104,22 @@ flowchart LR
 - Web UI: optional client for manual intake and job review.
 - Worker process: continuously claims tasks from the queue and executes adapters/enrichment.
 
+## Scheduling Options (Periodic Pipeline)
+
+Option 1: Local scheduler (CLI + cron).
+- Pros: fast to implement, easy to test, minimal infra.
+- Cons: schedule lives outside the app, no central audit, not hosted.
+
+Option 2: Render Cron Job (HTTP trigger).
+- Pros: hosted schedule, simple trigger.
+- Cons: Render-specific, no per-user cadence without DB logic, limited audit.
+
+Option 3: DB-backed schedule (policy in DB + trigger).
+- Pros: central/auditable, multi-user, UI-configurable later.
+- Cons: more schema/code, still needs a trigger.
+
+Current choice: Option 1 for local runs. Option 2/3 can be layered later.
+
 ## Scripts Directory (Purpose)
 
 - `scripts/start_api.sh`: bootstraps venv, installs deps, runs API server.
