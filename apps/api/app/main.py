@@ -15,6 +15,10 @@ from app.routes.workflows import router as workflows_router
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Job Intelligence Agent API")
+    print(
+        f"API_LOCAL_DEBUG={settings.api_local_debug} "
+        f"API_LOCAL_DEBUG_USER_ID={settings.api_local_debug_user_id}"
+    )
 
     allow_origins = ["http://localhost:5173", "http://localhost:5174"]
     allow_credentials = True
