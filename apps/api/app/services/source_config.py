@@ -11,7 +11,8 @@ from db.models import Source, UserSource, UserSourceConfig
 
 
 def _load_file_config() -> dict[str, Any]:
-    path = Path("config/sources.yaml")
+    root_dir = Path(__file__).resolve().parents[4]
+    path = root_dir / "config" / "sources.yaml"
     if not path.exists():
         raise RuntimeError("Missing config/sources.yaml")
     return yaml.safe_load(path.read_text())

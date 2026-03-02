@@ -27,13 +27,6 @@ export function App() {
   const [loadingQueue, setLoadingQueue] = useState(false);
   const [configText, setConfigText] = useState("");
   const [configStatus, setConfigStatus] = useState<string | null>(null);
-  const [jwtToken, setJwtToken] = useState(() => {
-    if (typeof window === "undefined") {
-      return "";
-    }
-    return window.localStorage.getItem("jobculler_jwt") ?? "";
-  });
-  const [jwtStatus, setJwtStatus] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -96,34 +89,9 @@ export function App() {
     loadConfig();
   }, []);
 
-  function saveJwtToken() {
-    if (typeof window === "undefined") {
-      return;
-    }
-    window.localStorage.setItem("jobculler_jwt", jwtToken.trim());
-    setJwtStatus("Token saved.");
-    setTimeout(() => setJwtStatus(null), 2000);
-  }
-
   return (
     <div style={{ maxWidth: 980, margin: "40px auto", fontFamily: "Georgia, serif" }}>
       <h1>Job Intelligence Agent</h1>
-      <p style={{ color: "#555" }}>
-        Paste a Supabase JWT below so the UI can call the API.
-      </p>
-      <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 16 }}>
-        <input
-          type="text"
-          value={jwtToken}
-          onChange={(e) => setJwtToken(e.target.value)}
-          placeholder="eyJhbGciOi..."
-          style={{ flex: 1, padding: 8 }}
-        />
-        <button type="button" onClick={saveJwtToken}>
-          Save Token
-        </button>
-        {jwtStatus && <span>{jwtStatus}</span>}
-      </div>
       <p>Manual URL intake (Phase 1)</p>
 
       <form onSubmit={onSubmit}>
