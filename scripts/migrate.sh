@@ -2,14 +2,24 @@
 set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+MODE="${1:-local}"
+ENV_FILE="$ROOT_DIR/.env"
 
-if [[ -f "$ROOT_DIR/.env" ]]; then
+if [[ "$MODE" == "remote" ]]; then
+  ENV_FILE="$ROOT_DIR/.env.remote"
+fi
+
+if [[ -f "$ENV_FILE" ]]; then
   set -a
-  source "$ROOT_DIR/.env"
+  source "$ENV_FILE"
   set +a
+else
+  echo "Missing env file: $ENV_FILE"
+  exit 1
 fi
 
 cd "$ROOT_DIR"
 
-PYTHONPATH=packages alembic -c packages/db/alembic.ini revision --autogenerate -m "${1:-auto}"
+MIGRATION_NAME="${2:-auto}"
+PYTHONPATH=packages alembic -c packages/db/alembic.ini revision --autogenerate -m "$MIGRATION_NAME"
 PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
