@@ -32,6 +32,7 @@ export function App() {
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState<string | null>(null);
+  const [authHasSession, setAuthHasSession] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetMode, setResetMode] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -103,17 +104,21 @@ export function App() {
       if (event === "PASSWORD_RECOVERY") {
         setResetMode(true);
         setAuthUser(session?.user?.email ?? null);
+        setAuthHasSession(Boolean(session));
       }
       if (event === "SIGNED_IN") {
         setAuthUser(session?.user?.email ?? null);
+        setAuthHasSession(Boolean(session));
       }
       if (event === "SIGNED_OUT") {
         setAuthUser(null);
+        setAuthHasSession(false);
       }
     });
 
     supabase.auth.getSession().then(({ data }) => {
       setAuthUser(data.session?.user?.email ?? null);
+      setAuthHasSession(Boolean(data.session));
       if (window.location.hash.includes("type=recovery")) {
         setResetMode(true);
       }
@@ -132,8 +137,20 @@ export function App() {
       setAuthStatus(`Sign-in failed: ${error.message}`);
       return;
     }
+    if (!data.session) {
+      setAuthStatus("Signed in. Check email to confirm before API access.");
+      setAuthUser(data.user?.email ?? null);
+      setAuthHasSession(false);
+      return;
+    }
     setAuthStatus("Signed in.");
     setAuthUser(data.user?.email ?? null);
+    setAuthHasSession(true);
+    loadConfig();
+    loadQueue(true);
+    listJobs()
+      .then((res) => setJobs(res.items))
+      .catch(() => setJobsError("Unable to load jobs"));
   }
 
   async function signUp(e: React.FormEvent) {
@@ -188,6 +205,7 @@ export function App() {
     setTimeout(async () => {
       await supabase.auth.signOut();
       setAuthUser(null);
+      setAuthHasSession(false);
       setResetMode(false);
       setNewPassword("");
       setConfirmPassword("");
@@ -210,7 +228,9 @@ export function App() {
         <h2>Sign In</h2>
         {authUser ? (
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <span>Signed in as {authUser}</span>
+            <span>
+              Signed in as {authUser} {authHasSession ? "(session active)" : "(no session)"}
+            </span>
             <button type="button" onClick={signOut}>
               Sign Out
             </button>
