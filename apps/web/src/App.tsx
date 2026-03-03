@@ -33,6 +33,9 @@ export function App() {
   const [authStatus, setAuthStatus] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState<string | null>(null);
   const [resetEmail, setResetEmail] = useState("");
+  const [resetMode, setResetMode] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -96,9 +99,29 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setResetMode(true);
+        setAuthUser(session?.user?.email ?? null);
+      }
+      if (event === "SIGNED_IN") {
+        setAuthUser(session?.user?.email ?? null);
+      }
+      if (event === "SIGNED_OUT") {
+        setAuthUser(null);
+      }
+    });
+
     supabase.auth.getSession().then(({ data }) => {
       setAuthUser(data.session?.user?.email ?? null);
+      if (window.location.hash.includes("type=recovery")) {
+        setResetMode(true);
+      }
     });
+
+    return () => {
+      subscription.subscription.unsubscribe();
+    };
   }, []);
 
   async function signIn(e: React.FormEvent) {
@@ -142,6 +165,31 @@ export function App() {
       return;
     }
     setAuthStatus("Password reset email sent.");
+  }
+
+  async function completePasswordReset(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 8) {
+      setAuthStatus("Password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setAuthStatus("Passwords do not match.");
+      return;
+    }
+    setAuthStatus("Updating password...");
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) {
+      setAuthStatus(`Password update failed: ${error.message}`);
+      return;
+    }
+    setAuthStatus("Password updated.");
+    setResetMode(false);
+    setNewPassword("");
+    setConfirmPassword("");
+    if (window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   }
 
   async function signOut() {
@@ -200,6 +248,30 @@ export function App() {
               Send Reset Link
             </button>
           </div>
+        )}
+        {resetMode && (
+          <form onSubmit={completePasswordReset} style={{ marginTop: 16 }}>
+            <h3>Set New Password</h3>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New password"
+                required
+                style={{ flex: "1 1 200px", padding: 8 }}
+              />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm password"
+                required
+                style={{ flex: "1 1 200px", padding: 8 }}
+              />
+              <button type="submit">Update Password</button>
+            </div>
+          </form>
         )}
       </div>
       <p>Manual URL intake (Phase 1)</p>
