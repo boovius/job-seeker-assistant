@@ -112,6 +112,21 @@ export function App() {
     setAuthUser(data.user?.email ?? null);
   }
 
+  async function signUp(e: React.FormEvent) {
+    e.preventDefault();
+    setAuthStatus("Creating account...");
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      setAuthStatus(`Sign-up failed: ${error.message}`);
+      return;
+    }
+    if (data.user?.email) {
+      setAuthStatus("Account created. Check your email to confirm.");
+    } else {
+      setAuthStatus("Account created. You may need to confirm via email.");
+    }
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
     setAuthUser(null);
@@ -149,6 +164,9 @@ export function App() {
               style={{ flex: "1 1 200px", padding: 8 }}
             />
             <button type="submit">Sign In</button>
+            <button type="button" onClick={signUp}>
+              Sign Up
+            </button>
           </form>
         )}
         {authStatus && <p style={{ marginTop: 8 }}>{authStatus}</p>}
