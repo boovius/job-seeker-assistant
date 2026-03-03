@@ -45,6 +45,7 @@ Note: the API server must be running for the web UI and worker CLI to work.
 From repo root:
 ```bash
 ./scripts/start_api.sh
+./scripts/start_api.sh remote
 ./scripts/start_web.sh
 ./scripts/start_worker.sh
 ./scripts/migrate.sh "init"
