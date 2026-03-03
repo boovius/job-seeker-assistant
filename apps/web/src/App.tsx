@@ -32,6 +32,7 @@ export function App() {
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState<string | null>(null);
+  const [resetEmail, setResetEmail] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -127,6 +128,22 @@ export function App() {
     }
   }
 
+  async function resetPassword() {
+    if (!resetEmail) {
+      setAuthStatus("Enter an email to reset.");
+      return;
+    }
+    setAuthStatus("Sending reset email...");
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: window.location.origin
+    });
+    if (error) {
+      setAuthStatus(`Reset failed: ${error.message}`);
+      return;
+    }
+    setAuthStatus("Password reset email sent.");
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
     setAuthUser(null);
@@ -170,6 +187,20 @@ export function App() {
           </form>
         )}
         {authStatus && <p style={{ marginTop: 8 }}>{authStatus}</p>}
+        {!authUser && (
+          <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <input
+              type="email"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              placeholder="Email for reset"
+              style={{ flex: "1 1 200px", padding: 8 }}
+            />
+            <button type="button" onClick={resetPassword}>
+              Send Reset Link
+            </button>
+          </div>
+        )}
       </div>
       <p>Manual URL intake (Phase 1)</p>
 

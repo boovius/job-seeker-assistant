@@ -223,7 +223,8 @@ The web UI uses Supabase Auth to sign in and obtains a JWT for API requests.
 1. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env`.
 2. Start the web UI and use the Sign In form.
 3. Use Sign Up to create a new account (Supabase may require email confirmation).
-3. The UI will attach the JWT to API requests automatically.
+4. Use “Send Reset Link” to request a password reset email.
+5. The UI will attach the JWT to API requests automatically.
 
 ## Automated Discovery Sources (Phase 1)
 We currently support Greenhouse, Lever, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Remotive/Adzuna/Jooble support keyword discovery.
