@@ -67,17 +67,18 @@ Note: the CLI currently connects directly to the DB for listing/queue commands. 
 2. Set `DATABASE_URL` in `.env` to your Supabase Postgres connection string. Supabase requires SSL, so include `sslmode=require`.
    Example:
    `postgresql+psycopg://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres?sslmode=require`
-3. Create the initial migration (one-time):
+3. IPv4 note: the direct `db.<PROJECT_REF>.supabase.co` hostname may not resolve on IPv4-only networks. If you see DNS errors, use the Supabase **Session Pooler** connection string from Project Settings -> Database -> Connection string -> Session Pooler.
+4. Create the initial migration (one-time):
 ```bash
 export $(cat ./.env | xargs)
 PYTHONPATH=packages alembic -c packages/db/alembic.ini revision --autogenerate -m "init"
 ```
-4. Run migrations:
+5. Run migrations:
 ```bash
 export $(cat ./.env | xargs)
 PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
 ```
-Note: `revision --autogenerate` creates the migration file; `upgrade head` applies it to the database.
+Note: `revision --autogenerate` creates the migration file; `upgrade head` applies it to the database. Alembic is used alongside SQLAlchemy to keep schema changes in Python and version-controlled in-repo.
 To confirm migrations:
 ```bash
 PYTHONPATH=packages alembic -c packages/db/alembic.ini current
