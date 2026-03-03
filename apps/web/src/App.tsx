@@ -169,27 +169,32 @@ export function App() {
 
   async function completePasswordReset(e: React.FormEvent) {
     e.preventDefault();
-    if (!newPassword || newPassword.length < 8) {
+    const trimmedPassword = newPassword.trim();
+    if (!trimmedPassword || trimmedPassword.length < 8) {
       setAuthStatus("Password must be at least 8 characters.");
       return;
     }
-    if (newPassword !== confirmPassword) {
+    if (trimmedPassword !== confirmPassword) {
       setAuthStatus("Passwords do not match.");
       return;
     }
     setAuthStatus("Updating password...");
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    const { error } = await supabase.auth.updateUser({ password: trimmedPassword });
     if (error) {
       setAuthStatus(`Password update failed: ${error.message}`);
       return;
     }
-    setAuthStatus("Password updated.");
-    setResetMode(false);
-    setNewPassword("");
-    setConfirmPassword("");
-    if (window.location.hash) {
-      window.history.replaceState(null, "", window.location.pathname);
-    }
+    setAuthStatus("Password updated. Redirecting to sign-in...");
+    setTimeout(async () => {
+      await supabase.auth.signOut();
+      setAuthUser(null);
+      setResetMode(false);
+      setNewPassword("");
+      setConfirmPassword("");
+      if (window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    }, 1200);
   }
 
   async function signOut() {
@@ -271,6 +276,7 @@ export function App() {
               />
               <button type="submit">Update Password</button>
             </div>
+            <p style={{ marginTop: 8, color: "#555" }}>Minimum 8 characters.</p>
           </form>
         )}
       </div>
