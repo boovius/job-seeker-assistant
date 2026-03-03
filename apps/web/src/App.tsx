@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSourceConfig, listJobs, listQueue, submitManualUrl, updateSourceConfig } from "./api";
+import { supabase } from "./supabase";
 
 type Job = {
   id: string;
@@ -27,6 +28,10 @@ export function App() {
   const [loadingQueue, setLoadingQueue] = useState(false);
   const [configText, setConfigText] = useState("");
   const [configStatus, setConfigStatus] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authStatus, setAuthStatus] = useState<string | null>(null);
+  const [authUser, setAuthUser] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,9 +94,65 @@ export function App() {
     loadConfig();
   }, []);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setAuthUser(data.session?.user?.email ?? null);
+    });
+  }, []);
+
+  async function signIn(e: React.FormEvent) {
+    e.preventDefault();
+    setAuthStatus("Signing in...");
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setAuthStatus(`Sign-in failed: ${error.message}`);
+      return;
+    }
+    setAuthStatus("Signed in.");
+    setAuthUser(data.user?.email ?? null);
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    setAuthUser(null);
+    setAuthStatus("Signed out.");
+  }
+
   return (
     <div style={{ maxWidth: 980, margin: "40px auto", fontFamily: "Georgia, serif" }}>
       <h1>Job Intelligence Agent</h1>
+      <div style={{ marginBottom: 24, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
+        <h2>Sign In</h2>
+        {authUser ? (
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <span>Signed in as {authUser}</span>
+            <button type="button" onClick={signOut}>
+              Sign Out
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={signIn} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              style={{ flex: "1 1 200px", padding: 8 }}
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              style={{ flex: "1 1 200px", padding: 8 }}
+            />
+            <button type="submit">Sign In</button>
+          </form>
+        )}
+        {authStatus && <p style={{ marginTop: 8 }}>{authStatus}</p>}
+      </div>
       <p>Manual URL intake (Phase 1)</p>
 
       <form onSubmit={onSubmit}>

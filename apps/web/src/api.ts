@@ -1,17 +1,10 @@
+import { getAccessToken } from "./supabase";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
-const tokenStorageKey = "jobculler_jwt";
-
-function getAuthToken() {
-  if (typeof window === "undefined") {
-    return undefined;
-  }
-  return window.localStorage.getItem(tokenStorageKey) ?? undefined;
-}
-
-function buildHeaders(extra?: Record<string, string>) {
+async function buildHeaders(extra?: Record<string, string>) {
   const headers: Record<string, string> = { ...extra };
-  const token = getAuthToken();
+  const token = await getAccessToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -21,7 +14,7 @@ function buildHeaders(extra?: Record<string, string>) {
 export async function submitManualUrl(url: string, notes?: string) {
   const res = await fetch(`${baseUrl}/jobs/manual`, {
     method: "POST",
-    headers: buildHeaders({ "Content-Type": "application/json" }),
+    headers: await buildHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ url, notes })
   });
 
@@ -34,7 +27,7 @@ export async function submitManualUrl(url: string, notes?: string) {
 
 export async function listJobs() {
   const res = await fetch(`${baseUrl}/jobs`, {
-    headers: buildHeaders()
+    headers: await buildHeaders()
   });
 
   if (!res.ok) {
@@ -47,7 +40,7 @@ export async function listJobs() {
 export async function listQueue(failedOnly = false) {
   const path = failedOnly ? "queue/failed" : "queue";
   const res = await fetch(`${baseUrl}/${path}`, {
-    headers: buildHeaders()
+    headers: await buildHeaders()
   });
 
   if (!res.ok) {
@@ -59,7 +52,7 @@ export async function listQueue(failedOnly = false) {
 
 export async function getSourceConfig() {
   const res = await fetch(`${baseUrl}/source-config`, {
-    headers: buildHeaders()
+    headers: await buildHeaders()
   });
 
   if (!res.ok) {
@@ -72,7 +65,7 @@ export async function getSourceConfig() {
 export async function updateSourceConfig(yaml: string) {
   const res = await fetch(`${baseUrl}/source-config`, {
     method: "PUT",
-    headers: buildHeaders({ "Content-Type": "application/json" }),
+    headers: await buildHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ yaml })
   });
 
