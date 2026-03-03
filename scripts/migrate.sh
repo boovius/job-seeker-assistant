@@ -21,5 +21,5 @@ fi
 cd "$ROOT_DIR"
 
 MIGRATION_NAME="${2:-auto}"
-PYTHONPATH=packages alembic -c packages/db/alembic.ini revision --autogenerate -m "$MIGRATION_NAME"
 PYTHONPATH=packages alembic -c packages/db/alembic.ini upgrade head
+PYTHONPATH=packages alembic -c packages/db/alembic.ini revision --autogenerate -m "$MIGRATION_NAME"
