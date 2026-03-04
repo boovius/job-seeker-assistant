@@ -8,8 +8,10 @@ from app.auth import RequireUser
 from app.db.deps import get_db
 from app.services.user_profiles import (
     get_preference_profile,
+    get_resume,
     get_value_profile,
     upsert_preference_profile,
+    upsert_resume,
     upsert_value_profile,
 )
 
@@ -49,6 +51,14 @@ class ValuePayload(BaseModel):
 class ValueResponse(BaseModel):
     values: list[str] | None
     dream_job_description: str | None
+
+
+class ResumePayload(BaseModel):
+    resume_text: str
+
+
+class ResumeResponse(BaseModel):
+    resume_text: str | None
 
 
 @router.get("/preferences", response_model=PreferenceResponse)
@@ -108,5 +118,26 @@ def update_values(payload: ValuePayload, db: Session = Depends(get_db), user=Req
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
     upsert_value_profile(db, user_id, payload.model_dump())
+    db.commit()
+    return {"status": "ok"}
+
+
+@router.get("/resume", response_model=ResumeResponse)
+def get_resume_endpoint(db: Session = Depends(get_db), user=RequireUser):
+    user_id = user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
+    resume = get_resume(db, user_id)
+    if not resume:
+        return ResumeResponse(resume_text=None)
+    return ResumeResponse(resume_text=resume.resume_text)
+
+
+@router.put("/resume")
+def update_resume(payload: ResumePayload, db: Session = Depends(get_db), user=RequireUser):
+    user_id = user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
+    upsert_resume(db, user_id, payload.resume_text)
     db.commit()
     return {"status": "ok"}

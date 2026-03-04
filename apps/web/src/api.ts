@@ -183,3 +183,29 @@ export async function updateValues(payload: { values?: string[]; dream_job_descr
 
   return res.json();
 }
+
+export async function getResume() {
+  const res = await fetch(`${baseUrl}/user/resume`, {
+    headers: await buildHeaders()
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<{ resume_text?: string | null }>;
+}
+
+export async function updateResume(resumeText: string) {
+  const res = await fetch(`${baseUrl}/user/resume`, {
+    method: "PUT",
+    headers: await buildHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ resume_text: resumeText })
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json();
+}

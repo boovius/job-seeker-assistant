@@ -123,6 +123,16 @@ class UserValueProfile(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
+class UserResume(Base):
+    __tablename__ = "user_resumes"
+    __table_args__ = (UniqueConstraint("user_id", name="uq_user_resumes_user_id"),)
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    resume_text = Column(Text, nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
 class WorkflowQueue(Base):
     __tablename__ = "workflow_queue"
 

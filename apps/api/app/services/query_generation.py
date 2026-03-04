@@ -5,7 +5,7 @@ from typing import Any
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.orm import Session
 
-from app.services.user_profiles import get_preference_profile, get_value_profile
+from app.services.user_profiles import get_preference_profile, get_resume, get_value_profile
 from db.models import Source, UserSource
 
 
@@ -42,7 +42,7 @@ def _fallback_profiles(pref: Any | None) -> LLMSearchProfiles:
     )
 
 
-def build_llm_prompt(pref: Any | None, values: Any | None) -> str:
+def build_llm_prompt(pref: Any | None, values: Any | None, resume: str | None) -> str:
     return (
         "Create search_profiles JSON for job discovery.\n"
         "Return JSON in this shape:\n"
@@ -51,6 +51,7 @@ def build_llm_prompt(pref: Any | None, values: Any | None) -> str:
         "]}\n\n"
         f"Preferences: {pref}\n"
         f"Values: {values}\n"
+        f"Resume: {resume}\n"
         "Keep role and sector keywords short. Use up to 5 profiles."
     )
 
@@ -58,6 +59,8 @@ def build_llm_prompt(pref: Any | None, values: Any | None) -> str:
 def generate_profiles(db: Session, user_id: str) -> LLMSearchProfiles:
     pref = get_preference_profile(db, user_id)
     values = get_value_profile(db, user_id)
+    resume = get_resume(db, user_id)
+    resume_text = resume.resume_text if resume else None
 
     if not pref and not values:
         return LLMSearchProfiles()
@@ -66,7 +69,7 @@ def generate_profiles(db: Session, user_id: str) -> LLMSearchProfiles:
         from app.services.llm.openai_client import OpenAIQueryGenerator
 
         generator = OpenAIQueryGenerator()
-        prompt = build_llm_prompt(pref, values)
+        prompt = build_llm_prompt(pref, values, resume_text)
         return generator.generate(prompt)
     except (ImportError, ValueError, ValidationError):
         return _fallback_profiles(pref)

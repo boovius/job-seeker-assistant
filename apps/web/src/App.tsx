@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   getPreferences,
+  getResume,
   getSourceConfig,
   getValues,
   listJobs,
@@ -9,6 +10,7 @@ import {
   submitIdealJob,
   submitManualUrl,
   updatePreferences,
+  updateResume,
   updateSourceConfig,
   updateValues
 } from "./api";
@@ -57,6 +59,8 @@ export function App() {
   const [coreValues, setCoreValues] = useState<string>("");
   const [dreamJob, setDreamJob] = useState<string>("");
   const [valuesStatus, setValuesStatus] = useState<string | null>(null);
+  const [resumeText, setResumeText] = useState<string>("");
+  const [resumeStatus, setResumeStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
@@ -167,6 +171,26 @@ export function App() {
     }
   }
 
+  async function loadResume() {
+    try {
+      const res = await getResume();
+      setResumeText(res.resume_text ?? "");
+      setResumeStatus(null);
+    } catch (err) {
+      setResumeStatus("Failed to load resume");
+    }
+  }
+
+  async function saveResume() {
+    setResumeStatus("Saving...");
+    try {
+      await updateResume(resumeText);
+      setResumeStatus("Saved");
+    } catch (err) {
+      setResumeStatus("Save failed");
+    }
+  }
+
   async function saveValues() {
     setValuesStatus("Saving...");
     const valuesList = coreValues
@@ -198,6 +222,7 @@ export function App() {
   useEffect(() => {
     loadPreferences();
     loadValues();
+    loadResume();
   }, []);
 
   async function runPipelineNow() {
@@ -601,6 +626,26 @@ export function App() {
           Reload
         </button>
         {valuesStatus && <span>{valuesStatus}</span>}
+      </div>
+
+      <hr style={{ margin: "32px 0" }} />
+
+      <h2>Resume</h2>
+      <p style={{ color: "#555" }}>Paste a text version of your resume for query generation.</p>
+      <textarea
+        value={resumeText}
+        onChange={(e) => setResumeText(e.target.value)}
+        style={{ width: "100%", minHeight: 220, padding: 10, fontFamily: "monospace" }}
+        placeholder="Paste resume text here"
+      />
+      <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
+        <button type="button" onClick={saveResume}>
+          Save Resume
+        </button>
+        <button type="button" onClick={loadResume}>
+          Reload
+        </button>
+        {resumeStatus && <span>{resumeStatus}</span>}
       </div>
 
       <hr style={{ margin: "32px 0" }} />

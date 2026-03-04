@@ -6,7 +6,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from db.models import UserPreferenceProfile, UserValueProfile
+from db.models import UserPreferenceProfile, UserResume, UserValueProfile
 
 
 def _parse_salary(value: Any) -> tuple[int | None, int | None, str | None, str | None]:
@@ -189,3 +189,18 @@ def upsert_value_profile(db: Session, user_id: str, payload: dict[str, Any]) -> 
     )
     db.add(val)
     return val
+
+
+def get_resume(db: Session, user_id: str) -> UserResume | None:
+    return db.execute(select(UserResume).where(UserResume.user_id == user_id)).scalar_one_or_none()
+
+
+def upsert_resume(db: Session, user_id: str, resume_text: str) -> UserResume:
+    resume = get_resume(db, user_id)
+    if resume:
+        resume.resume_text = resume_text
+        db.add(resume)
+        return resume
+    resume = UserResume(user_id=user_id, resume_text=resume_text)
+    db.add(resume)
+    return resume
