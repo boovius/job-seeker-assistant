@@ -104,7 +104,7 @@ def _upsert_job(db: Session, job: dict) -> None:
     db.execute(stmt)
 
 
-def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> None:
+def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> int:
     payload = task.payload or {}
     source_id = payload.get("source_id")
     user_id = payload.get("user_id")
@@ -125,6 +125,7 @@ def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> None:
 
     cursor.cursor = updated.state
     db.add(cursor)
+    return len(listings)
 
 
 def _handle_fetch_detail(db: Session, task: WorkflowQueue) -> None:
@@ -181,7 +182,8 @@ def run_once() -> None:
 
         try:
             if task.task_type == "fetch_listings":
-                _handle_fetch_listings(db, task)
+                listings_count = _handle_fetch_listings(db, task)
+                task.last_error = f"Fetched {listings_count} listings; enqueued {listings_count} details"
             elif task.task_type == "fetch_detail":
                 _handle_fetch_detail(db, task)
             else:
