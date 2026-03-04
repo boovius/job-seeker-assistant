@@ -110,6 +110,20 @@ Example `config/sources.yaml`:
 ```yaml
 version: 1
 
+core_preferences:
+  location: "Los Angeles, CA"
+  work_mode: "hybrid"
+  salary: "$140k+"
+  sector: "climate"
+  target_role: "technical product manager"
+  company_size: "50-200"
+
+core_values:
+  values:
+    - "Mission-driven team"
+    - "Strong product craft"
+  dream_job_description: "Climate tech PM role with strong user impact and clear growth."
+
 sources:
   remotive:
     adapter: remotive_api_v1

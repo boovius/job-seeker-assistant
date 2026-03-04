@@ -1,5 +1,17 @@
 version: 1
 
+core_preferences:
+  location: ""
+  work_mode: ""
+  salary: ""
+  sector: ""
+  target_role: ""
+  company_size: ""
+
+core_values:
+  values: []
+  dream_job_description: ""
+
 sources:
   greenhouse:
     adapter: greenhouse_job_board_v1
