@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import logging
 import urllib.request
+from urllib.parse import urljoin
+from urllib.error import HTTPError
 
 from fastapi import Depends, HTTPException, Request, status
 import jwt
@@ -20,6 +22,9 @@ logger = logging.getLogger("app.auth")
 def _jwks_url() -> str | None:
     if settings.supabase_jwks_url:
         return settings.supabase_jwks_url
+    if settings.supabase_url:
+        base = settings.supabase_url.rstrip("/") + "/"
+        return urljoin(base, "auth/v1/keys")
     if not settings.supabase_project_ref:
         return None
     return f"https://{settings.supabase_project_ref}.supabase.co/auth/v1/keys"
@@ -47,8 +52,14 @@ def require_user(request: Request) -> dict:
             if settings.supabase_anon_key:
                 req.add_header("apikey", settings.supabase_anon_key)
                 req.add_header("Authorization", f"Bearer {settings.supabase_anon_key}")
-            with urllib.request.urlopen(req) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
+            try:
+                with urllib.request.urlopen(req) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+            except HTTPError as exc:
+                raise AuthError(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail=f"Invalid token: JWKS fetch failed ({exc.code})",
+                ) from exc
             key_data = next((key for key in data.get("keys", []) if key.get("kid") == kid), None)
             if not key_data:
                 raise AuthError(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token: key id not found")
