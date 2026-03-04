@@ -51,6 +51,15 @@ Steps:
 - This plan allows progress without external network dependencies.
 - Once Supabase DNS resolves, switch the `DATABASE_URL` back and re-run migrations.
 
+## Future: Resume Chunking + Embeddings
+Goal: make resume text usable for RAG/scoring by chunking into semantic sections and storing embeddings.
+
+Steps:
+1. Add `user_resume_chunks` table (user_id, chunk_text, chunk_index, embedding, metadata).
+2. Chunk resumes on save (by headings or max tokens).
+3. Generate embeddings for chunks (provider: OpenAI or local).
+4. Use top-k chunks for job fit scoring and query generation.
+
 ## Completed
 
 1. Run locally with a local Postgres (Docker or native) to validate the pipeline end-to-end.
