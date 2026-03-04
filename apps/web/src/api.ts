@@ -75,3 +75,17 @@ export async function updateSourceConfig(yaml: string) {
 
   return res.json();
 }
+
+export async function runPipeline(maxCycles = 3) {
+  const res = await fetch(`${baseUrl}/workflows/run-pipeline`, {
+    method: "POST",
+    headers: await buildHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ run_worker: true, max_cycles: maxCycles })
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<{ status: string; tasks: number; run_worker?: boolean; max_cycles?: number }>;
+}

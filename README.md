@@ -230,6 +230,11 @@ The web UI uses Supabase Auth to sign in and obtains a JWT for API requests.
 5. After clicking the reset link, use the “Set New Password” form in the UI.
 6. The UI will attach the JWT to API requests automatically.
 
+## UI Pipeline Trigger
+The UI includes a “Run Pipeline” button that enqueues all enabled sources for the signed-in user and runs a few worker cycles on the API.
+- Endpoint: `POST /workflows/run-pipeline` with `{ "run_worker": true, "max_cycles": 5 }`
+- This is user-scoped and uses the signed-in user ID from the JWT.
+
 ## Automated Discovery Sources (Phase 1)
 We currently support Greenhouse, Lever, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Remotive/Adzuna/Jooble support keyword discovery.
 

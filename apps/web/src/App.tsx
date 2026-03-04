@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getSourceConfig, listJobs, listQueue, submitManualUrl, updateSourceConfig } from "./api";
+import { getSourceConfig, listJobs, listQueue, runPipeline, submitManualUrl, updateSourceConfig } from "./api";
 import { supabase } from "./supabase";
 
 type Job = {
@@ -28,6 +28,7 @@ export function App() {
   const [loadingQueue, setLoadingQueue] = useState(false);
   const [configText, setConfigText] = useState("");
   const [configStatus, setConfigStatus] = useState<string | null>(null);
+  const [pipelineStatus, setPipelineStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
@@ -358,6 +359,12 @@ export function App() {
       <hr style={{ margin: "32px 0" }} />
 
       <h2>Queue Status</h2>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center" }}>
+        <button type="button" onClick={runPipelineNow}>
+          Run Pipeline
+        </button>
+        {pipelineStatus && <span>{pipelineStatus}</span>}
+      </div>
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button type="button" onClick={() => loadQueue(false)} disabled={loadingQueue}>
           {loadingQueue ? "Loading..." : "Refresh All"}
@@ -393,3 +400,15 @@ export function App() {
     </div>
   );
 }
+  async function runPipelineNow() {
+    setPipelineStatus("Running pipeline...");
+    try {
+      const res = await runPipeline(5);
+      setPipelineStatus(`Queued ${res.tasks} sources (worker: ${res.run_worker ? "yes" : "no"})`);
+      await loadQueue(true);
+      const jobsRes = await listJobs();
+      setJobs(jobsRes.items);
+    } catch (err) {
+      setPipelineStatus("Failed to run pipeline");
+    }
+  }

@@ -1,10 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.auth import RequireUser
 from app.db.deps import get_db
 from app.workers.runner import run_once
 from db.models import Source, UserSource, WorkflowQueue
+
+
+def _run_worker_cycles(max_cycles: int) -> None:
+    for _ in range(max_cycles):
+        run_once()
 
 router = APIRouter(prefix="/workflows", tags=["workflows"])
 
@@ -44,3 +49,40 @@ def enqueue_fetch_listings(payload: dict, db: Session = Depends(get_db), user=Re
     db.add(task)
     db.commit()
     return {"status": "queued", "task_id": str(task.id)}
+
+
+@router.post("/run-pipeline")
+def run_pipeline(
+    payload: dict,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    user=RequireUser,
+):
+    user_id = user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
+
+    max_cycles = payload.get("max_cycles", 3)
+    run_worker = payload.get("run_worker", True)
+
+    rows = (
+        db.query(Source, UserSource)
+        .join(UserSource, UserSource.source_id == Source.id)
+        .filter(UserSource.user_id == user_id)
+        .filter(UserSource.enabled.is_(True))
+        .all()
+    )
+
+    if not rows:
+        return {"status": "no_sources", "tasks": 0}
+
+    for source, _ in rows:
+        task = WorkflowQueue(task_type="fetch_listings", payload={"source_id": str(source.id), "user_id": user_id})
+        db.add(task)
+
+    db.commit()
+
+    if run_worker:
+        background_tasks.add_task(_run_worker_cycles, int(max_cycles))
+
+    return {"status": "queued", "tasks": len(rows), "run_worker": bool(run_worker), "max_cycles": int(max_cycles)}
