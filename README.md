@@ -211,13 +211,15 @@ Notes:
 - Each cycle runs one `run_once()` then sleeps for `WORKER_POLL_SECONDS` (default 5s).
 - This is a local-only scheduler; hosted scheduling can be added later.
 
-## Supabase Auth (JWKS) Setup
+## Supabase Auth (JWT Verification)
 1. In Supabase, go to Project Settings -> API and note:
    - Project ref
-   - JWKS URL
-2. Set `SUPABASE_PROJECT_REF` in `.env`.
-3. The API will use the JWKS URL derived from `SUPABASE_PROJECT_REF` to verify tokens (ES256).
-4. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
+   - Project URL
+   - Anon public key
+2. Set `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, and `SUPABASE_ANON_KEY` in `.env`.
+3. The API will try to verify JWTs via JWKS (`<SUPABASE_URL>/auth/v1/keys`).
+4. If the JWKS endpoint is unavailable or blocked, the API falls back to validating the token via `auth/v1/user` (requires `SUPABASE_ANON_KEY`).
+5. `SUPABASE_JWT_SECRET` is legacy HS256 and only used if JWKS is not configured.
 
 ## Web Auth (Supabase)
 The web UI uses Supabase Auth to sign in and obtains a JWT for API requests.
