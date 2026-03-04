@@ -56,6 +56,27 @@ def require_user(request: Request) -> dict:
                 with urllib.request.urlopen(req) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
             except HTTPError as exc:
+                # Fallback: validate token via Supabase Auth user endpoint.
+                if settings.supabase_url and settings.supabase_anon_key:
+                    user_req = urllib.request.Request(
+                        urljoin(settings.supabase_url.rstrip("/") + "/", "auth/v1/user")
+                    )
+                    user_req.add_header("apikey", settings.supabase_anon_key)
+                    user_req.add_header("Authorization", f"Bearer {token}")
+                    try:
+                        with urllib.request.urlopen(user_req) as user_resp:
+                            user_data = json.loads(user_resp.read().decode("utf-8"))
+                        return {
+                            "sub": user_data.get("id"),
+                            "email": user_data.get("email"),
+                            "role": user_data.get("role", "authenticated"),
+                            "user_metadata": user_data.get("user_metadata", {}),
+                        }
+                    except HTTPError as user_exc:
+                        raise AuthError(
+                            status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"Invalid token: JWKS fetch failed ({exc.code}) and user lookup failed ({user_exc.code})",
+                        ) from user_exc
                 raise AuthError(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail=f"Invalid token: JWKS fetch failed ({exc.code})",

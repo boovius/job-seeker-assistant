@@ -257,6 +257,7 @@ Environment variables to set in `.env`:
 - `SUPABASE_JWT_AUDIENCE` (optional; default `authenticated`)
 - `SUPABASE_ANON_KEY` (used by API to fetch JWKS on some networks)
 - `SUPABASE_JWKS_URL` (optional override for JWKS URL)
+- If JWKS fetch fails, the API falls back to validating the token via `auth/v1/user` (requires `SUPABASE_ANON_KEY`).
 - `API_PORT` (optional)
 - `API_ENV` (optional)
 - `API_LOCAL_DEBUG` (optional; when true disables auth and opens CORS for local UI)
