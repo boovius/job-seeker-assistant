@@ -60,6 +60,15 @@ Steps:
 3. Generate embeddings for chunks (provider: OpenAI or local).
 4. Use top-k chunks for job fit scoring and query generation.
 
+## Future: pgvector Adoption
+Goal: move resume/job embeddings to native Postgres vector type for fast similarity search.
+
+Steps:
+1. Enable pgvector extension in Supabase.
+2. Migrate embeddings from JSONB to vector columns.
+3. Add indexes (IVFFlat/HNSW) for similarity queries.
+4. Implement top-k retrieval queries for resume/job matching.
+
 ## Completed
 
 1. Run locally with a local Postgres (Docker or native) to validate the pipeline end-to-end.
