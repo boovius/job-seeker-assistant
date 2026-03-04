@@ -30,6 +30,19 @@ class ManualSubmission(Base):
     status = Column(Text, nullable=False, default="queued")
 
 
+class IdealJobSubmission(Base):
+    __tablename__ = "ideal_job_submissions"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    url = Column(Text, nullable=False)
+    why_text = Column(Text, nullable=False)
+    page_text = Column(Text, nullable=True)
+    status = Column(Text, nullable=False, default="queued")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    fetched_at = Column(DateTime(timezone=True), nullable=True)
+
+
 class Company(Base):
     __tablename__ = "companies"
 

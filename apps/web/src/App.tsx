@@ -6,6 +6,7 @@ import {
   listJobs,
   listQueue,
   runPipeline,
+  submitIdealJob,
   submitManualUrl,
   updatePreferences,
   updateSourceConfig,
@@ -32,6 +33,9 @@ export function App() {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<string | null>(null);
+  const [idealUrl, setIdealUrl] = useState("");
+  const [idealWhy, setIdealWhy] = useState("");
+  const [idealStatus, setIdealStatus] = useState<string | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobsError, setJobsError] = useState<string | null>(null);
   const [queue, setQueue] = useState<QueueItem[]>([]);
@@ -74,6 +78,19 @@ export function App() {
       setNotes("");
     } catch (err) {
       setStatus("Failed to submit");
+    }
+  }
+
+  async function onSubmitIdeal(e: React.FormEvent) {
+    e.preventDefault();
+    setIdealStatus("Submitting...");
+    try {
+      await submitIdealJob(idealUrl, idealWhy);
+      setIdealStatus("Queued");
+      setIdealUrl("");
+      setIdealWhy("");
+    } catch (err) {
+      setIdealStatus("Failed to submit");
     }
   }
 
@@ -435,6 +452,41 @@ export function App() {
       </form>
 
       {status && <p style={{ marginTop: 16 }}>{status}</p>}
+
+      <hr style={{ margin: "32px 0" }} />
+
+      <h2>Ideal Job Intake</h2>
+      <p style={{ color: "#555" }}>Provide a job URL and why it is ideal for you.</p>
+      <form onSubmit={onSubmitIdeal}>
+        <div style={{ marginBottom: 12 }}>
+          <label>
+            Job URL
+            <input
+              type="url"
+              required
+              value={idealUrl}
+              onChange={(e) => setIdealUrl(e.target.value)}
+              style={{ width: "100%", padding: 8, marginTop: 6 }}
+              placeholder="https://company.com/careers/ideal-role"
+            />
+          </label>
+        </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>
+            Why This Is Ideal
+            <textarea
+              value={idealWhy}
+              onChange={(e) => setIdealWhy(e.target.value)}
+              style={{ width: "100%", padding: 8, marginTop: 6, minHeight: 120 }}
+              placeholder="Describe why this role is a great fit for you."
+            />
+          </label>
+        </div>
+        <button type="submit" style={{ padding: "8px 14px" }}>
+          Save Ideal Job
+        </button>
+      </form>
+      {idealStatus && <p style={{ marginTop: 16 }}>{idealStatus}</p>}
 
       <hr style={{ margin: "32px 0" }} />
 

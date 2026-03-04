@@ -5,11 +5,12 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
+import httpx
 
 from app.db.session import SessionLocal
 from app.services.adapters import FetchCursor, RawListing, get_adapter
 from app.services.sources import to_registry_entry
-from db.models import Job, Source, SourceCursor, UserSource, WorkflowQueue
+from db.models import IdealJobSubmission, Job, Source, SourceCursor, UserSource, WorkflowQueue
 
 
 def claim_next_task(db: Session, lease_minutes: int = 5) -> WorkflowQueue | None:
@@ -173,6 +174,25 @@ def _handle_fetch_detail(db: Session, task: WorkflowQueue) -> None:
     )
 
 
+def _handle_ideal_ingest(db: Session, task: WorkflowQueue) -> None:
+    payload = task.payload or {}
+    submission_id = payload.get("submission_id")
+    url = payload.get("url")
+    if not submission_id or not url:
+        raise ValueError("Missing submission_id or url")
+
+    submission = db.query(IdealJobSubmission).filter(IdealJobSubmission.id == submission_id).first()
+    if not submission:
+        raise ValueError("Unknown ideal job submission")
+
+    resp = httpx.get(url, timeout=20)
+    resp.raise_for_status()
+    submission.page_text = resp.text[:200000]
+    submission.fetched_at = datetime.now(timezone.utc)
+    submission.status = "processed"
+    db.add(submission)
+
+
 def run_once() -> None:
     db = SessionLocal()
     try:
@@ -186,6 +206,8 @@ def run_once() -> None:
                 task.last_error = f"Fetched {listings_count} listings; enqueued {listings_count} details"
             elif task.task_type == "fetch_detail":
                 _handle_fetch_detail(db, task)
+            elif task.task_type == "ideal_ingest":
+                _handle_ideal_ingest(db, task)
             else:
                 raise ValueError(f"Unknown task_type: {task.task_type}")
 

@@ -25,6 +25,20 @@ export async function submitManualUrl(url: string, notes?: string) {
   return res.json();
 }
 
+export async function submitIdealJob(url: string, whyText: string) {
+  const res = await fetch(`${baseUrl}/jobs/ideal`, {
+    method: "POST",
+    headers: await buildHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ url, why_text: whyText })
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json();
+}
+
 export async function listJobs() {
   const res = await fetch(`${baseUrl}/jobs`, {
     headers: await buildHeaders()
