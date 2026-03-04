@@ -39,14 +39,24 @@ def require_user(request: Request) -> dict:
         if jwks_url:
             jwk_client = jwt.PyJWKClient(jwks_url)
             signing_key = jwk_client.get_signing_key_from_jwt(token)
-            payload = jwt.decode(token, signing_key.key, algorithms=["ES256"])
+            payload = jwt.decode(
+                token,
+                signing_key.key,
+                algorithms=["ES256"],
+                audience=settings.supabase_jwt_audience,
+            )
         else:
             if not settings.supabase_jwt_secret:
                 raise AuthError(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail="Missing SUPABASE_PROJECT_REF or SUPABASE_JWT_SECRET",
                 )
-            payload = jwt.decode(token, settings.supabase_jwt_secret, algorithms=["HS256"])
+            payload = jwt.decode(
+                token,
+                settings.supabase_jwt_secret,
+                algorithms=["HS256"],
+                audience=settings.supabase_jwt_audience,
+            )
     except jwt.PyJWTError as exc:
         try:
             header = jwt.get_unverified_header(token)
