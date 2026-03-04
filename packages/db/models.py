@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Text
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 from sqlalchemy.sql import func
 
@@ -79,6 +79,34 @@ class UserPreference(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
     preference_type = Column(Text, nullable=False)
     value = Column(JSONB, nullable=False)
+
+
+class UserPreferenceProfile(Base):
+    __tablename__ = "user_preference_profiles"
+    __table_args__ = (UniqueConstraint("user_id", name="uq_user_preference_profiles_user_id"),)
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    location = Column(Text, nullable=True)
+    work_mode = Column(Text, nullable=True)
+    salary_min = Column(Integer, nullable=True)
+    salary_max = Column(Integer, nullable=True)
+    salary_currency = Column(Text, nullable=True)
+    sector = Column(Text, nullable=True)
+    target_role = Column(Text, nullable=True)
+    company_size = Column(Text, nullable=True)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class UserValueProfile(Base):
+    __tablename__ = "user_value_profiles"
+    __table_args__ = (UniqueConstraint("user_id", name="uq_user_value_profiles_user_id"),)
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    values = Column(JSONB, nullable=True)
+    dream_job_description = Column(Text, nullable=True)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
 class WorkflowQueue(Base):

@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.auth import RequireUser
 from app.db.deps import get_db
 from app.services.source_config import apply_sources, get_yaml_or_file, upsert_config
+from app.services.user_profiles import apply_user_profiles
 
 router = APIRouter(prefix="/source-config", tags=["source-config"])
 
@@ -30,6 +31,7 @@ def update_source_config(payload: dict, db: Session = Depends(get_db), user=Requ
 
     config = upsert_config(db, user_id, yaml_text)
     apply_sources(db, user_id, config.config_json)
+    apply_user_profiles(db, user_id, config.config_json)
     db.commit()
 
     return {"status": "ok"}
