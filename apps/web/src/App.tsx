@@ -470,13 +470,18 @@ export function App() {
         </label>
         <label>
           Salary Period
-          <input
-            type="text"
+          <select
             value={preferences.salary_period}
             onChange={(e) => setPreferences({ ...preferences, salary_period: e.target.value })}
             style={{ width: "100%", padding: 8, marginTop: 6 }}
-            placeholder="year"
-          />
+          >
+            <option value="">Select period</option>
+            <option value="year">Year</option>
+            <option value="month">Month</option>
+            <option value="week">Week</option>
+            <option value="day">Day</option>
+            <option value="hour">Hour</option>
+          </select>
         </label>
         <label>
           Sector
