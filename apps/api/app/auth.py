@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from fastapi import Depends, HTTPException, Request, status
 import jwt
 
@@ -8,6 +10,9 @@ from app.config import settings
 
 class AuthError(HTTPException):
     pass
+
+
+logger = logging.getLogger("app.auth")
 
 
 def _jwks_url() -> str | None:
@@ -43,7 +48,16 @@ def require_user(request: Request) -> dict:
                 )
             payload = jwt.decode(token, settings.supabase_jwt_secret, algorithms=["HS256"])
     except jwt.PyJWTError as exc:
-        raise AuthError(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token") from exc
+        try:
+            header = jwt.get_unverified_header(token)
+            kid = header.get("kid")
+        except jwt.PyJWTError:
+            kid = None
+        logger.warning("JWT verification failed", extra={"kid": kid, "jwks_url": jwks_url, "error": str(exc)})
+        detail = "Invalid token"
+        if settings.api_env != "production":
+            detail = f"Invalid token: {exc}"
+        raise AuthError(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail) from exc
 
     return payload
 

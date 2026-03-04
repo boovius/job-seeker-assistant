@@ -17,7 +17,8 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Job Intelligence Agent API")
     print(
         f"API_LOCAL_DEBUG={settings.api_local_debug} "
-        f"API_LOCAL_DEBUG_USER_ID={settings.api_local_debug_user_id}"
+        f"API_LOCAL_DEBUG_USER_ID={settings.api_local_debug_user_id} "
+        f"SUPABASE_PROJECT_REF={settings.supabase_project_ref}"
     )
 
     allow_origins = ["http://localhost:5173", "http://localhost:5174"]
