@@ -84,6 +84,7 @@ To confirm migrations:
 ```bash
 PYTHONPATH=packages alembic -c packages/db/alembic.ini current
 PYTHONPATH=packages alembic -c packages/db/alembic.ini history
+PYTHONPATH=packages alembic -c packages/db/alembic.ini heads
 ```
 
 ## Local Dev (API + Local Postgres via Docker)
