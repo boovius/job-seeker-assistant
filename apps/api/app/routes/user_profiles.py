@@ -23,6 +23,7 @@ class PreferencePayload(BaseModel):
     salary_min: int | None = None
     salary_max: int | None = None
     salary_currency: str | None = None
+    salary_period: str | None = None
     sector: str | None = None
     target_role: str | None = None
     company_size: str | None = None
@@ -34,6 +35,7 @@ class PreferenceResponse(BaseModel):
     salary_min: int | None
     salary_max: int | None
     salary_currency: str | None
+    salary_period: str | None
     sector: str | None
     target_role: str | None
     company_size: str | None
@@ -72,6 +74,7 @@ def get_preferences(db: Session = Depends(get_db), user=RequireUser):
         salary_min=pref.salary_min,
         salary_max=pref.salary_max,
         salary_currency=pref.salary_currency,
+        salary_period=pref.salary_period,
         sector=pref.sector,
         target_role=pref.target_role,
         company_size=pref.company_size,

@@ -44,6 +44,7 @@ export function App() {
     location: "",
     work_mode: "",
     salary: "",
+    salary_period: "",
     sector: "",
     target_role: "",
     company_size: ""
@@ -116,6 +117,7 @@ export function App() {
         location: res.location ?? "",
         work_mode: res.work_mode ?? "",
         salary: "",
+        salary_period: res.salary_period ?? "",
         sector: res.sector ?? "",
         target_role: res.target_role ?? "",
         company_size: res.company_size ?? ""
@@ -464,6 +466,16 @@ export function App() {
             onChange={(e) => setPreferences({ ...preferences, salary: e.target.value })}
             style={{ width: "100%", padding: 8, marginTop: 6 }}
             placeholder="$140k+"
+          />
+        </label>
+        <label>
+          Salary Period
+          <input
+            type="text"
+            value={preferences.salary_period}
+            onChange={(e) => setPreferences({ ...preferences, salary_period: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+            placeholder="year"
           />
         </label>
         <label>

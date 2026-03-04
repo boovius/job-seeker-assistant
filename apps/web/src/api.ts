@@ -112,6 +112,7 @@ export async function getPreferences() {
     salary_min?: number | null;
     salary_max?: number | null;
     salary_currency?: string | null;
+    salary_period?: string | null;
     sector?: string | null;
     target_role?: string | null;
     company_size?: string | null;
@@ -125,6 +126,7 @@ export async function updatePreferences(payload: {
   salary_min?: number;
   salary_max?: number;
   salary_currency?: string;
+  salary_period?: string;
   sector?: string;
   target_role?: string;
   company_size?: string;

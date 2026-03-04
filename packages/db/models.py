@@ -92,6 +92,7 @@ class UserPreferenceProfile(Base):
     salary_min = Column(Integer, nullable=True)
     salary_max = Column(Integer, nullable=True)
     salary_currency = Column(Text, nullable=True)
+    salary_period = Column(Text, nullable=True)
     sector = Column(Text, nullable=True)
     target_role = Column(Text, nullable=True)
     company_size = Column(Text, nullable=True)
