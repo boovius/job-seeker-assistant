@@ -10,6 +10,7 @@ from app.routes.queue import router as queue_router
 from app.routes.source_config import router as source_config_router
 from app.routes.sources import router as sources_router
 from app.routes.sources_list import router as sources_list_router
+from app.routes.user_profiles import router as user_profiles_router
 from app.routes.workflows import router as workflows_router
 
 
@@ -43,6 +44,7 @@ def create_app() -> FastAPI:
     app.include_router(source_config_router)
     app.include_router(sources_router)
     app.include_router(sources_list_router)
+    app.include_router(user_profiles_router)
     app.include_router(workflows_router)
 
     return app

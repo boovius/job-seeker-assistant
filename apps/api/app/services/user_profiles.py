@@ -102,3 +102,65 @@ def apply_user_profiles(db: Session, user_id: str, config_json: dict[str, Any]) 
                 dream_job_description=core_values.get("dream_job_description"),
             )
         )
+
+
+def get_preference_profile(db: Session, user_id: str) -> UserPreferenceProfile | None:
+    return (
+        db.execute(select(UserPreferenceProfile).where(UserPreferenceProfile.user_id == user_id))
+        .scalar_one_or_none()
+    )
+
+
+def upsert_preference_profile(db: Session, user_id: str, payload: dict[str, Any]) -> UserPreferenceProfile:
+    salary_min, salary_max, salary_currency = _parse_salary(payload.get("salary"))
+    pref = get_preference_profile(db, user_id)
+    if pref:
+        pref.location = payload.get("location")
+        pref.work_mode = payload.get("work_mode")
+        pref.salary_min = payload.get("salary_min", salary_min)
+        pref.salary_max = payload.get("salary_max", salary_max)
+        pref.salary_currency = payload.get("salary_currency", salary_currency)
+        pref.sector = payload.get("sector")
+        pref.target_role = payload.get("target_role")
+        pref.company_size = payload.get("company_size")
+        db.add(pref)
+        return pref
+    pref = UserPreferenceProfile(
+        user_id=user_id,
+        location=payload.get("location"),
+        work_mode=payload.get("work_mode"),
+        salary_min=payload.get("salary_min", salary_min),
+        salary_max=payload.get("salary_max", salary_max),
+        salary_currency=payload.get("salary_currency", salary_currency),
+        sector=payload.get("sector"),
+        target_role=payload.get("target_role"),
+        company_size=payload.get("company_size"),
+    )
+    db.add(pref)
+    return pref
+
+
+def get_value_profile(db: Session, user_id: str) -> UserValueProfile | None:
+    return (
+        db.execute(select(UserValueProfile).where(UserValueProfile.user_id == user_id))
+        .scalar_one_or_none()
+    )
+
+
+def upsert_value_profile(db: Session, user_id: str, payload: dict[str, Any]) -> UserValueProfile:
+    values = payload.get("values")
+    if values is not None and not isinstance(values, list):
+        values = [values]
+    val = get_value_profile(db, user_id)
+    if val:
+        val.values = values
+        val.dream_job_description = payload.get("dream_job_description")
+        db.add(val)
+        return val
+    val = UserValueProfile(
+        user_id=user_id,
+        values=values,
+        dream_job_description=payload.get("dream_job_description"),
+    )
+    db.add(val)
+    return val
