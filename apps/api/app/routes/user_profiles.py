@@ -14,6 +14,7 @@ from app.services.user_profiles import (
     upsert_resume,
     upsert_value_profile,
 )
+from app.services.resume_chunks import upsert_resume_chunks
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -139,5 +140,6 @@ def update_resume(payload: ResumePayload, db: Session = Depends(get_db), user=Re
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
     upsert_resume(db, user_id, payload.resume_text)
+    upsert_resume_chunks(db, user_id, payload.resume_text)
     db.commit()
     return {"status": "ok"}

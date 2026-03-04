@@ -287,6 +287,7 @@ The pipeline can use an LLM to generate `search_profiles` from user preferences 
 2. Keep the API key server-side and load it via environment variables (do not expose it in the browser).
 2. On pipeline run, the API generates profiles and applies them to keyword-based adapters (Remotive/Adzuna/Jooble).
 3. If the LLM is not configured, the system falls back to a simple profile derived from target role and sector.
+4. Resume text is chunked and embedded to support future RAG-driven query generation.
 - `API_PORT` (optional)
 - `API_ENV` (optional)
 - `API_LOCAL_DEBUG` (optional; when true disables auth and opens CORS for local UI)

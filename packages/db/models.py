@@ -133,6 +133,18 @@ class UserResume(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
+class UserResumeChunk(Base):
+    __tablename__ = "user_resume_chunks"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    chunk_index = Column(Integer, nullable=False)
+    chunk_text = Column(Text, nullable=False)
+    embedding = Column(JSONB, nullable=True)
+    metadata = Column(JSONB, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 class WorkflowQueue(Base):
     __tablename__ = "workflow_queue"
 
