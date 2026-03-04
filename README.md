@@ -255,6 +255,8 @@ Environment variables to set in `.env`:
 - `SUPABASE_URL` (Supabase project URL for web auth)
 - `SUPABASE_JWT_SECRET` (deprecated once JWKS verification is wired)
 - `SUPABASE_JWT_AUDIENCE` (optional; default `authenticated`)
+- `SUPABASE_ANON_KEY` (used by API to fetch JWKS on some networks)
+- `SUPABASE_JWKS_URL` (optional override for JWKS URL)
 - `API_PORT` (optional)
 - `API_ENV` (optional)
 - `API_LOCAL_DEBUG` (optional; when true disables auth and opens CORS for local UI)

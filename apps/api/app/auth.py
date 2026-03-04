@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import logging
+import urllib.request
 
 from fastapi import Depends, HTTPException, Request, status
 import jwt
@@ -16,6 +18,8 @@ logger = logging.getLogger("app.auth")
 
 
 def _jwks_url() -> str | None:
+    if settings.supabase_jwks_url:
+        return settings.supabase_jwks_url
     if not settings.supabase_project_ref:
         return None
     return f"https://{settings.supabase_project_ref}.supabase.co/auth/v1/keys"
@@ -37,11 +41,21 @@ def require_user(request: Request) -> dict:
 
     try:
         if jwks_url:
-            jwk_client = jwt.PyJWKClient(jwks_url)
-            signing_key = jwk_client.get_signing_key_from_jwt(token)
+            header = jwt.get_unverified_header(token)
+            kid = header.get("kid")
+            req = urllib.request.Request(jwks_url)
+            if settings.supabase_anon_key:
+                req.add_header("apikey", settings.supabase_anon_key)
+                req.add_header("Authorization", f"Bearer {settings.supabase_anon_key}")
+            with urllib.request.urlopen(req) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            key_data = next((key for key in data.get("keys", []) if key.get("kid") == kid), None)
+            if not key_data:
+                raise AuthError(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token: key id not found")
+            signing_key = jwt.algorithms.ECAlgorithm.from_jwk(json.dumps(key_data))
             payload = jwt.decode(
                 token,
-                signing_key.key,
+                signing_key,
                 algorithms=["ES256"],
                 audience=settings.supabase_jwt_audience,
             )

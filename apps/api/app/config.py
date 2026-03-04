@@ -14,6 +14,8 @@ class Settings:
     supabase_jwt_secret: str = os.getenv("SUPABASE_JWT_SECRET", "")
     supabase_project_ref: str = os.getenv("SUPABASE_PROJECT_REF", "")
     supabase_jwt_audience: str = os.getenv("SUPABASE_JWT_AUDIENCE", "authenticated")
+    supabase_anon_key: str = os.getenv("SUPABASE_ANON_KEY", "")
+    supabase_jwks_url: str = os.getenv("SUPABASE_JWKS_URL", "")
 
 
 settings = Settings()
