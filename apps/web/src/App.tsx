@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
-import { getSourceConfig, listJobs, listQueue, runPipeline, submitManualUrl, updateSourceConfig } from "./api";
+import {
+  getPreferences,
+  getSourceConfig,
+  getValues,
+  listJobs,
+  listQueue,
+  runPipeline,
+  submitManualUrl,
+  updatePreferences,
+  updateSourceConfig,
+  updateValues
+} from "./api";
 import { supabase } from "./supabase";
 
 type Job = {
@@ -29,6 +40,18 @@ export function App() {
   const [configText, setConfigText] = useState("");
   const [configStatus, setConfigStatus] = useState<string | null>(null);
   const [pipelineStatus, setPipelineStatus] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState({
+    location: "",
+    work_mode: "",
+    salary: "",
+    sector: "",
+    target_role: "",
+    company_size: ""
+  });
+  const [preferencesStatus, setPreferencesStatus] = useState<string | null>(null);
+  const [coreValues, setCoreValues] = useState<string>("");
+  const [dreamJob, setDreamJob] = useState<string>("");
+  const [valuesStatus, setValuesStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
@@ -86,6 +109,59 @@ export function App() {
     }
   }
 
+  async function loadPreferences() {
+    try {
+      const res = await getPreferences();
+      setPreferences({
+        location: res.location ?? "",
+        work_mode: res.work_mode ?? "",
+        salary: "",
+        sector: res.sector ?? "",
+        target_role: res.target_role ?? "",
+        company_size: res.company_size ?? ""
+      });
+      setPreferencesStatus(null);
+    } catch (err) {
+      setPreferencesStatus("Failed to load preferences");
+    }
+  }
+
+  async function savePreferences() {
+    setPreferencesStatus("Saving...");
+    try {
+      await updatePreferences(preferences);
+      setPreferencesStatus("Saved");
+    } catch (err) {
+      setPreferencesStatus("Save failed");
+    }
+  }
+
+  async function loadValues() {
+    try {
+      const res = await getValues();
+      const valuesList = res.values ?? [];
+      setCoreValues(valuesList.join("\n"));
+      setDreamJob(res.dream_job_description ?? "");
+      setValuesStatus(null);
+    } catch (err) {
+      setValuesStatus("Failed to load values");
+    }
+  }
+
+  async function saveValues() {
+    setValuesStatus("Saving...");
+    const valuesList = coreValues
+      .split("\n")
+      .map((value) => value.trim())
+      .filter(Boolean);
+    try {
+      await updateValues({ values: valuesList, dream_job_description: dreamJob });
+      setValuesStatus("Saved");
+    } catch (err) {
+      setValuesStatus("Save failed");
+    }
+  }
+
   useEffect(() => {
     listJobs()
       .then((res) => setJobs(res.items))
@@ -100,6 +176,11 @@ export function App() {
     loadConfig();
   }, []);
 
+  useEffect(() => {
+    loadPreferences();
+    loadValues();
+  }, []);
+
   async function runPipelineNow() {
     setPipelineStatus("Running pipeline...");
     try {
@@ -112,9 +193,9 @@ export function App() {
       const jobsRes = await listJobs();
       setJobs(jobsRes.items);
     } catch (err) {
-      setPipelineStatus("Failed to run pipeline");
-    }
+    setPipelineStatus("Failed to run pipeline");
   }
+}
 
   useEffect(() => {
     const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
@@ -352,6 +433,106 @@ export function App() {
       </form>
 
       {status && <p style={{ marginTop: 16 }}>{status}</p>}
+
+      <hr style={{ margin: "32px 0" }} />
+
+      <h2>Core Preferences</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <label>
+          Location
+          <input
+            type="text"
+            value={preferences.location}
+            onChange={(e) => setPreferences({ ...preferences, location: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+          />
+        </label>
+        <label>
+          Work Mode (remote/hybrid/onsite)
+          <input
+            type="text"
+            value={preferences.work_mode}
+            onChange={(e) => setPreferences({ ...preferences, work_mode: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+          />
+        </label>
+        <label>
+          Salary (free text)
+          <input
+            type="text"
+            value={preferences.salary}
+            onChange={(e) => setPreferences({ ...preferences, salary: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+            placeholder="$140k+"
+          />
+        </label>
+        <label>
+          Sector
+          <input
+            type="text"
+            value={preferences.sector}
+            onChange={(e) => setPreferences({ ...preferences, sector: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+          />
+        </label>
+        <label>
+          Target Role
+          <input
+            type="text"
+            value={preferences.target_role}
+            onChange={(e) => setPreferences({ ...preferences, target_role: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+          />
+        </label>
+        <label>
+          Company Size
+          <input
+            type="text"
+            value={preferences.company_size}
+            onChange={(e) => setPreferences({ ...preferences, company_size: e.target.value })}
+            style={{ width: "100%", padding: 8, marginTop: 6 }}
+            placeholder="50-200"
+          />
+        </label>
+      </div>
+      <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
+        <button type="button" onClick={savePreferences}>
+          Save Preferences
+        </button>
+        <button type="button" onClick={loadPreferences}>
+          Reload
+        </button>
+        {preferencesStatus && <span>{preferencesStatus}</span>}
+      </div>
+
+      <hr style={{ margin: "32px 0" }} />
+
+      <h2>Core Values</h2>
+      <label>
+        Values (one per line)
+        <textarea
+          value={coreValues}
+          onChange={(e) => setCoreValues(e.target.value)}
+          style={{ width: "100%", minHeight: 120, padding: 10, fontFamily: "monospace", marginTop: 6 }}
+        />
+      </label>
+      <label style={{ display: "block", marginTop: 12 }}>
+        Dream Job Description
+        <textarea
+          value={dreamJob}
+          onChange={(e) => setDreamJob(e.target.value)}
+          style={{ width: "100%", minHeight: 120, padding: 10, fontFamily: "monospace", marginTop: 6 }}
+        />
+      </label>
+      <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
+        <button type="button" onClick={saveValues}>
+          Save Values
+        </button>
+        <button type="button" onClick={loadValues}>
+          Reload
+        </button>
+        {valuesStatus && <span>{valuesStatus}</span>}
+      </div>
 
       <hr style={{ margin: "32px 0" }} />
 
