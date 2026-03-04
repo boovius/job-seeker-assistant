@@ -1,17 +1,17 @@
-\"\"\"add user preference and value profiles
+"""add user preference and value profiles
 
 Revision ID: 4c2d63d7a9b1
 Revises: 276f2e157e0d
 Create Date: 2026-03-04 04:25:00.000000
-\"\"\"
+"""
 
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = \"4c2d63d7a9b1\"
-down_revision = \"276f2e157e0d\"
+revision = "4c2d63d7a9b1"
+down_revision = "276f2e157e0d"
 branch_labels = None
 depends_on = None
 
