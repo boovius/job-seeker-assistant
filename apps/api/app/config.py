@@ -18,5 +18,8 @@ class Settings:
     supabase_url: str = os.getenv("SUPABASE_URL", "")
     supabase_jwks_url: str = os.getenv("SUPABASE_JWKS_URL", "")
 
+    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
+    openai_model: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
 
 settings = Settings()

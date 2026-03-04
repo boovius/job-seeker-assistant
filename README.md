@@ -279,6 +279,12 @@ Environment variables to set in `.env`:
 - `SUPABASE_ANON_KEY` (used by API to fetch JWKS on some networks)
 - `SUPABASE_JWKS_URL` (optional override for JWKS URL)
 - If JWKS fetch fails, the API falls back to validating the token via `auth/v1/user` (requires `SUPABASE_ANON_KEY`).
+
+## LLM Query Generation (OpenAI)
+The pipeline can use an LLM to generate `search_profiles` from user preferences and values.
+1. Set `OPENAI_API_KEY` and (optionally) `OPENAI_MODEL` in `.env`.
+2. On pipeline run, the API generates profiles and applies them to keyword-based adapters (Remotive/Adzuna/Jooble).
+3. If the LLM is not configured, the system falls back to a simple profile derived from target role and sector.
 - `API_PORT` (optional)
 - `API_ENV` (optional)
 - `API_LOCAL_DEBUG` (optional; when true disables auth and opens CORS for local UI)

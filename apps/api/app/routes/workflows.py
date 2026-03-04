@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.auth import RequireUser
 from app.db.deps import get_db
+from app.services.query_generation import apply_profiles_to_sources, generate_profiles
 from app.workers.runner import run_once
 from db.models import Source, UserSource, WorkflowQueue
 
@@ -76,6 +77,9 @@ def run_pipeline(
     if not rows:
         return {"status": "no_sources", "tasks": 0, "message": "No enabled sources for user"}
 
+    profiles = generate_profiles(db, user_id)
+    updated_sources = apply_profiles_to_sources(db, user_id, profiles)
+
     for source, _ in rows:
         task = WorkflowQueue(task_type="fetch_listings", payload={"source_id": str(source.id), "user_id": user_id})
         db.add(task)
@@ -91,5 +95,5 @@ def run_pipeline(
         "run_worker": bool(run_worker),
         "max_cycles": int(max_cycles),
         "source_ids": [str(source.id) for source, _ in rows],
-        "message": f"Enqueued {len(rows)} sources",
+        "message": f"Enqueued {len(rows)} sources (updated {updated_sources} search profiles)",
     }
