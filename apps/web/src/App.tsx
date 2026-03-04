@@ -100,6 +100,22 @@ export function App() {
     loadConfig();
   }, []);
 
+  async function runPipelineNow() {
+    setPipelineStatus("Running pipeline...");
+    try {
+      const res = await runPipeline(5);
+      const detail = res.message ?? `Queued ${res.tasks} sources`;
+      setPipelineStatus(
+        `${detail} (worker: ${res.run_worker ? "yes" : "no"}, cycles: ${res.max_cycles ?? 0})`
+      );
+      await loadQueue(true);
+      const jobsRes = await listJobs();
+      setJobs(jobsRes.items);
+    } catch (err) {
+      setPipelineStatus("Failed to run pipeline");
+    }
+  }
+
   useEffect(() => {
     const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
@@ -400,15 +416,3 @@ export function App() {
     </div>
   );
 }
-  async function runPipelineNow() {
-    setPipelineStatus("Running pipeline...");
-    try {
-      const res = await runPipeline(5);
-      setPipelineStatus(`Queued ${res.tasks} sources (worker: ${res.run_worker ? "yes" : "no"})`);
-      await loadQueue(true);
-      const jobsRes = await listJobs();
-      setJobs(jobsRes.items);
-    } catch (err) {
-      setPipelineStatus("Failed to run pipeline");
-    }
-  }

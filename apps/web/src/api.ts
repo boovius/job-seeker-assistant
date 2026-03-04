@@ -87,5 +87,12 @@ export async function runPipeline(maxCycles = 3) {
     throw new Error(`Request failed: ${res.status}`);
   }
 
-  return res.json() as Promise<{ status: string; tasks: number; run_worker?: boolean; max_cycles?: number }>;
+  return res.json() as Promise<{
+    status: string;
+    tasks: number;
+    run_worker?: boolean;
+    max_cycles?: number;
+    source_ids?: string[];
+    message?: string;
+  }>;
 }

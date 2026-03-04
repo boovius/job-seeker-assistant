@@ -74,7 +74,7 @@ def run_pipeline(
     )
 
     if not rows:
-        return {"status": "no_sources", "tasks": 0}
+        return {"status": "no_sources", "tasks": 0, "message": "No enabled sources for user"}
 
     for source, _ in rows:
         task = WorkflowQueue(task_type="fetch_listings", payload={"source_id": str(source.id), "user_id": user_id})
@@ -85,4 +85,11 @@ def run_pipeline(
     if run_worker:
         background_tasks.add_task(_run_worker_cycles, int(max_cycles))
 
-    return {"status": "queued", "tasks": len(rows), "run_worker": bool(run_worker), "max_cycles": int(max_cycles)}
+    return {
+        "status": "queued",
+        "tasks": len(rows),
+        "run_worker": bool(run_worker),
+        "max_cycles": int(max_cycles),
+        "source_ids": [str(source.id) for source, _ in rows],
+        "message": f"Enqueued {len(rows)} sources",
+    }
