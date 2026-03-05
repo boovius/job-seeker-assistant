@@ -141,7 +141,7 @@ class UserResumeChunk(Base):
     chunk_index = Column(Integer, nullable=False)
     chunk_text = Column(Text, nullable=False)
     embedding = Column(JSONB, nullable=True)
-    metadata = Column(JSONB, nullable=True)
+    chunk_metadata = Column(JSONB, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 

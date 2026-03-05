@@ -61,7 +61,7 @@ def upsert_resume_chunks(db: Session, user_id: str, resume_text: str) -> int:
                 chunk_index=idx,
                 chunk_text=chunk,
                 embedding=embedding,
-                metadata={"length": len(chunk)},
+                chunk_metadata={"length": len(chunk)},
             )
         )
     return len(chunks)

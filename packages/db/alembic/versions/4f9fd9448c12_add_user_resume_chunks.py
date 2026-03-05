@@ -24,7 +24,7 @@ def upgrade() -> None:
         sa.Column("chunk_index", sa.Integer(), nullable=False),
         sa.Column("chunk_text", sa.Text(), nullable=False),
         sa.Column("embedding", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
-        sa.Column("metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column("chunk_metadata", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
