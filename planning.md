@@ -69,6 +69,18 @@ Steps:
 3. Add indexes (IVFFlat/HNSW) for similarity queries.
 4. Implement top-k retrieval queries for resume/job matching.
 
+## Future: Top Rated Companies Alerts
+Goal: monitor a curated list of top-rated companies for new openings and alert users.
+
+Steps:
+1. Store user’s top-rated companies list (manual input or imported source).
+2. Run periodic checks for new openings at those companies.
+3. Generate notifications across channels (email, SMS, WhatsApp, Signal, Slack).
+4. Track alert delivery and user preferences.
+
+## Maintenance Note
+As this planning doc grows, consider restructuring into phases and grouped themes for readability.
+
 ## Completed
 
 1. Run locally with a local Postgres (Docker or native) to validate the pipeline end-to-end.
