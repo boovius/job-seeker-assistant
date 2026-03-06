@@ -250,6 +250,12 @@ The UI includes a “Run Pipeline” button that enqueues all enabled sources fo
 - Endpoint: `POST /workflows/run-pipeline` with `{ "run_worker": true, "max_cycles": 5 }`
 - This is user-scoped and uses the signed-in user ID from the JWT.
 
+## Pipeline Events (Logging)
+The pipeline now records structured events in the `pipeline_events` table and exposes them in the UI.
+- API: `GET /pipeline-events`
+- UI: “Pipeline Events” panel with refresh button
+- Example events: task claimed, listings fetched, job upserted, task failed
+
 ## Automated Discovery Sources (Phase 1)
 We currently support Greenhouse, Lever, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Remotive/Adzuna/Jooble support keyword discovery.
 

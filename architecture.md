@@ -104,6 +104,15 @@ flowchart LR
 - Web UI: optional client for manual intake and job review.
 - Worker process: continuously claims tasks from the queue and executes adapters/enrichment.
 
+## Observability (Pipeline Events)
+Pipeline steps emit structured events into a `pipeline_events` table. This provides a lightweight audit trail across key handoffs:
+- Task claimed (queue -> worker)
+- Listings fetched (adapter output)
+- Job upserted (DB write)
+- Task failed (error captured)
+
+The web UI can display recent events via `GET /pipeline-events`.
+
 ## Scheduling Options (Periodic Pipeline)
 
 Option 1: Local scheduler (CLI + cron).
