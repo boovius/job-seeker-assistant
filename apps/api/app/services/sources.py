@@ -22,6 +22,7 @@ def to_registry_entry(source: Source, user_source: UserSource | None = None) -> 
     config = source.default_config or {}
     if user_source and user_source.filters:
         config = {**config, **user_source.filters}
+    user_id = str(user_source.user_id) if user_source else None
 
     return SourceRegistryEntry(
         slug=source.slug,
@@ -31,4 +32,5 @@ def to_registry_entry(source: Source, user_source: UserSource | None = None) -> 
         enabled=enabled,
         weight=weight,
         config=config,
+        user_id=user_id,
     )

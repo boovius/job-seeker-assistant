@@ -73,7 +73,8 @@ def generate_profiles(db: Session, user_id: str) -> LLMSearchProfiles:
 
         generator = OpenAIQueryGenerator()
         prompt = build_llm_prompt(pref, values, resume_text, chunks)
-        return generator.generate(prompt)
+        profiles = generator.generate(prompt)
+        return profiles
     except (ImportError, ValueError, ValidationError):
         return _fallback_profiles(pref)
 

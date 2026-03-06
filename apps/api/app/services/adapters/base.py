@@ -18,6 +18,7 @@ class SourceRegistryEntry:
     rate_limit_rps: float = 0.2
     concurrency: int = 2
     config: dict[str, Any] = field(default_factory=dict)
+    user_id: Optional[str] = None
 
 
 @dataclass
