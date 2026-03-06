@@ -209,3 +209,25 @@ export async function updateResume(resumeText: string) {
 
   return res.json();
 }
+
+export async function listPipelineEvents(limit = 50) {
+  const res = await fetch(`${baseUrl}/pipeline-events?limit=${limit}`, {
+    headers: await buildHeaders()
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<{
+    items: Array<{
+      id: string;
+      event_type: string;
+      message?: string | null;
+      payload?: Record<string, unknown> | null;
+      created_at?: string;
+      task_id?: string | null;
+    }>;
+    count: number;
+  }>;
+}

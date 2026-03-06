@@ -6,6 +6,7 @@ import {
   getValues,
   listJobs,
   listQueue,
+  listPipelineEvents,
   runPipeline,
   submitIdealJob,
   submitManualUrl,
@@ -61,6 +62,8 @@ export function App() {
   const [valuesStatus, setValuesStatus] = useState<string | null>(null);
   const [resumeText, setResumeText] = useState<string>("");
   const [resumeStatus, setResumeStatus] = useState<string | null>(null);
+  const [events, setEvents] = useState<Array<{ id: string; event_type: string; message?: string | null }>>([]);
+  const [eventsStatus, setEventsStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
@@ -191,6 +194,16 @@ export function App() {
     }
   }
 
+  async function loadEvents() {
+    try {
+      const res = await listPipelineEvents(50);
+      setEvents(res.items);
+      setEventsStatus(null);
+    } catch (err) {
+      setEventsStatus("Failed to load events");
+    }
+  }
+
   async function saveValues() {
     setValuesStatus("Saving...");
     const valuesList = coreValues
@@ -223,6 +236,7 @@ export function App() {
     loadPreferences();
     loadValues();
     loadResume();
+    loadEvents();
   }, []);
 
   async function runPipelineNow() {
@@ -647,6 +661,25 @@ export function App() {
         </button>
         {resumeStatus && <span>{resumeStatus}</span>}
       </div>
+
+      <hr style={{ margin: "32px 0" }} />
+
+      <h2>Pipeline Events</h2>
+      <div style={{ display: "flex", gap: 8, marginBottom: 10, alignItems: "center" }}>
+        <button type="button" onClick={loadEvents}>
+          Refresh Events
+        </button>
+        {eventsStatus && <span>{eventsStatus}</span>}
+      </div>
+      {events.length === 0 && <p>No events yet.</p>}
+      <ul>
+        {events.map((event) => (
+          <li key={event.id}>
+            <strong>{event.event_type}</strong>
+            {event.message ? ` — ${event.message}` : ""}
+          </li>
+        ))}
+      </ul>
 
       <hr style={{ margin: "32px 0" }} />
 

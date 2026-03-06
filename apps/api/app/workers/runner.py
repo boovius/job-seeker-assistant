@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 import httpx
 
 from app.db.session import SessionLocal
+from app.services.pipeline_events import log_event
 from app.services.adapters import FetchCursor, RawListing, get_adapter
 from app.services.sources import to_registry_entry
 from db.models import IdealJobSubmission, Job, Source, SourceCursor, UserSource, WorkflowQueue
@@ -40,6 +41,14 @@ def claim_next_task(db: Session, lease_minutes: int = 5) -> WorkflowQueue | None
     db.add(task)
     db.commit()
     db.refresh(task)
+    log_event(
+        db,
+        event_type="task_claimed",
+        message=f"Claimed task {task.task_type}",
+        payload={"task_type": task.task_type},
+        user_id=(task.payload or {}).get("user_id"),
+        task_id=str(task.id),
+    )
     return task
 
 
@@ -117,6 +126,14 @@ def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> int:
         raise ValueError("Unknown source")
 
     registry = to_registry_entry(source, user_source)
+    log_event(
+        db,
+        event_type="fetch_listings_start",
+        message="Fetching listings",
+        payload={"source_id": str(source.id), "adapter": source.adapter, "config": registry.config},
+        user_id=user_id,
+        task_id=str(task.id),
+    )
     adapter = get_adapter(source.adapter)
     cursor = _get_cursor(db, source_id, user_id)
 
@@ -126,6 +143,14 @@ def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> int:
 
     cursor.cursor = updated.state
     db.add(cursor)
+    log_event(
+        db,
+        event_type="fetch_listings_done",
+        message=f"Fetched {len(listings)} listings",
+        payload={"source_id": str(source.id), "count": len(listings)},
+        user_id=user_id,
+        task_id=str(task.id),
+    )
     return len(listings)
 
 
@@ -172,6 +197,14 @@ def _handle_fetch_detail(db: Session, task: WorkflowQueue) -> None:
             "status": "new",
         },
     )
+    log_event(
+        db,
+        event_type="fetch_detail_done",
+        message="Upserted job",
+        payload={"source_id": str(source.id), "canonical_url": normalized.canonical_url},
+        user_id=user_id,
+        task_id=str(task.id),
+    )
 
 
 def _handle_ideal_ingest(db: Session, task: WorkflowQueue) -> None:
@@ -214,11 +247,27 @@ def run_once() -> None:
             task.status = "succeeded"
             task.finished_at = datetime.now(timezone.utc)
             db.commit()
+            log_event(
+                db,
+                event_type="task_succeeded",
+                message=f"Task {task.task_type} succeeded",
+                payload={"task_type": task.task_type},
+                user_id=(task.payload or {}).get("user_id"),
+                task_id=str(task.id),
+            )
         except Exception as exc:  # pragma: no cover - runner logs later
             task.status = "failed"
             task.last_error = str(exc)
             task.finished_at = datetime.now(timezone.utc)
             db.commit()
+            log_event(
+                db,
+                event_type="task_failed",
+                message=f"Task {task.task_type} failed",
+                payload={"task_type": task.task_type, "error": str(exc)},
+                user_id=(task.payload or {}).get("user_id"),
+                task_id=str(task.id),
+            )
     finally:
         db.close()
 

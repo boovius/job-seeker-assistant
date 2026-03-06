@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.auth import RequireUser
 from app.db.deps import get_db
+from app.services.pipeline_events import log_event
 from app.services.query_generation import apply_profiles_to_sources, generate_profiles
 from app.workers.runner import run_once
 from db.models import Source, UserSource, WorkflowQueue
@@ -78,13 +79,34 @@ def run_pipeline(
         return {"status": "no_sources", "tasks": 0, "message": "No enabled sources for user"}
 
     profiles = generate_profiles(db, user_id)
+    log_event(
+        db,
+        event_type="llm_profiles",
+        message="Generated search profiles",
+        payload={"profiles": [profile.model_dump() for profile in profiles.search_profiles]},
+        user_id=user_id,
+    )
     updated_sources = apply_profiles_to_sources(db, user_id, profiles)
+    log_event(
+        db,
+        event_type="profiles_applied",
+        message=f"Applied profiles to {updated_sources} sources",
+        payload={"updated_sources": updated_sources},
+        user_id=user_id,
+    )
 
     for source, _ in rows:
         task = WorkflowQueue(task_type="fetch_listings", payload={"source_id": str(source.id), "user_id": user_id})
         db.add(task)
 
     db.commit()
+    log_event(
+        db,
+        event_type="pipeline_enqueued",
+        message=f"Enqueued {len(rows)} sources",
+        payload={"source_ids": [str(source.id) for source, _ in rows]},
+        user_id=user_id,
+    )
 
     if run_worker:
         background_tasks.add_task(_run_worker_cycles, int(max_cycles))

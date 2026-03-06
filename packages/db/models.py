@@ -145,6 +145,18 @@ class UserResumeChunk(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
+class PipelineEvent(Base):
+    __tablename__ = "pipeline_events"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid())
+    user_id = Column(UUID(as_uuid=True), nullable=True)
+    task_id = Column(UUID(as_uuid=True), nullable=True)
+    event_type = Column(Text, nullable=False)
+    message = Column(Text, nullable=True)
+    payload = Column(JSONB, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 class WorkflowQueue(Base):
     __tablename__ = "workflow_queue"
 
