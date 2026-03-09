@@ -62,7 +62,16 @@ export function App() {
   const [valuesStatus, setValuesStatus] = useState<string | null>(null);
   const [resumeText, setResumeText] = useState<string>("");
   const [resumeStatus, setResumeStatus] = useState<string | null>(null);
-  const [events, setEvents] = useState<Array<{ id: string; event_type: string; message?: string | null }>>([]);
+  const [events, setEvents] = useState<
+    Array<{
+      id: string;
+      event_type: string;
+      message?: string | null;
+      payload?: Record<string, unknown> | null;
+      created_at?: string;
+      task_id?: string | null;
+    }>
+  >([]);
   const [eventsStatus, setEventsStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -675,8 +684,22 @@ export function App() {
       <ul>
         {events.map((event) => (
           <li key={event.id}>
-            <strong>{event.event_type}</strong>
-            {event.message ? ` — ${event.message}` : ""}
+            <div>
+              <strong>{event.event_type}</strong>
+              {event.message ? ` — ${event.message}` : ""}
+            </div>
+            <div style={{ color: "#555", fontSize: 14 }}>
+              {event.created_at ? `At ${new Date(event.created_at).toLocaleString()}` : "Time unknown"}
+              {event.task_id ? ` · Task ${event.task_id}` : ""}
+            </div>
+            {event.payload && (
+              <details style={{ marginTop: 6 }}>
+                <summary>Payload</summary>
+                <pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>
+                  {JSON.stringify(event.payload, null, 2)}
+                </pre>
+              </details>
+            )}
           </li>
         ))}
       </ul>

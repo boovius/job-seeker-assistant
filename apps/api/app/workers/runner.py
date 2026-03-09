@@ -10,6 +10,7 @@ import httpx
 from app.db.session import SessionLocal
 from app.services.pipeline_events import log_event
 from app.services.adapters import FetchCursor, RawListing, get_adapter
+from app.services.adapters.query_utils import build_queries
 from app.services.sources import to_registry_entry
 from db.models import IdealJobSubmission, Job, Source, SourceCursor, UserSource, WorkflowQueue
 
@@ -78,6 +79,68 @@ def _get_cursor(db: Session, source_id: str, user_id: str) -> SourceCursor:
     return cursor
 
 
+def _redact_config(config: dict) -> dict:
+    redacted = {}
+    for key, value in (config or {}).items():
+        if key in {"api_key", "app_key", "app_id"}:
+            redacted[key] = "<redacted>" if value else None
+            continue
+        redacted[key] = value
+    return redacted
+
+
+def _build_query_sets(config: dict) -> list[dict]:
+    profiles = build_queries(config or {})
+    if profiles:
+        return profiles
+    keywords = config.get("keywords", []) if config else []
+    location = config.get("location") if config else None
+    if not keywords and not location:
+        return []
+    return [{"keywords": " ".join([kw for kw in keywords if kw]), "location": location, "remote": None}]
+
+
+def _build_request_specs(adapter: str, config: dict, query_sets: list[dict]) -> list[dict]:
+    if adapter == "adzuna_api_v1":
+        country = (config or {}).get("country", "us")
+        results_per_page = (config or {}).get("results_per_page", 50)
+        url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
+        specs = []
+        for qs in query_sets or [{}]:
+            params = {"results_per_page": results_per_page, "content-type": "application/json"}
+            if qs.get("keywords"):
+                params["what"] = qs["keywords"]
+            if qs.get("location"):
+                params["where"] = qs["location"]
+            specs.append({"method": "GET", "url": url, "params": params})
+        return specs
+    if adapter == "jooble_api_v1":
+        page = (config or {}).get("page", 1)
+        url = "https://jooble.org/api/<redacted>"
+        specs = []
+        for qs in query_sets or [{}]:
+            payload = {"keywords": qs.get("keywords", ""), "page": page}
+            if qs.get("location"):
+                payload["location"] = qs["location"]
+            specs.append({"method": "POST", "url": url, "json": payload})
+        return specs
+    return []
+
+
+def _build_listings_preview(listings: list[RawListing], limit: int = 5) -> list[dict]:
+    preview = []
+    for listing in listings[:limit]:
+        preview.append(
+            {
+                "title": listing.title_hint,
+                "company": listing.company_hint,
+                "location": listing.location_hint,
+                "url": listing.url,
+            }
+        )
+    return preview
+
+
 def _enqueue_fetch_detail(db: Session, listing: RawListing, source_id: str, user_id: str) -> None:
     payload = {
         "source_id": source_id,
@@ -126,11 +189,20 @@ def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> int:
         raise ValueError("Unknown source")
 
     registry = to_registry_entry(source, user_source)
+    query_sets = _build_query_sets(registry.config or {})
+    request_specs = _build_request_specs(source.adapter, registry.config or {}, query_sets)
     log_event(
         db,
         event_type="fetch_listings_start",
         message="Fetching listings",
-        payload={"source_id": str(source.id), "adapter": source.adapter, "config": registry.config},
+        payload={
+            "source_id": str(source.id),
+            "adapter": source.adapter,
+            "base_url": source.base_url,
+            "config": _redact_config(registry.config or {}),
+            "query_sets": query_sets,
+            "requests": request_specs,
+        },
         user_id=user_id,
         task_id=str(task.id),
     )
@@ -147,7 +219,11 @@ def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> int:
         db,
         event_type="fetch_listings_done",
         message=f"Fetched {len(listings)} listings",
-        payload={"source_id": str(source.id), "count": len(listings)},
+        payload={
+            "source_id": str(source.id),
+            "count": len(listings),
+            "listings_preview": _build_listings_preview(listings),
+        },
         user_id=user_id,
         task_id=str(task.id),
     )
