@@ -1,4 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
 from app.auth import RequireUser
@@ -86,6 +87,7 @@ def run_pipeline(
         payload={"profiles": [profile.model_dump() for profile in profiles.search_profiles]},
         user_id=user_id,
     )
+    import pdb; pdb.set_trace();
     updated_sources = apply_profiles_to_sources(db, user_id, profiles)
     log_event(
         db,
@@ -119,3 +121,14 @@ def run_pipeline(
         "source_ids": [str(source.id) for source, _ in rows],
         "message": f"Enqueued {len(rows)} sources (updated {updated_sources} search profiles)",
     }
+
+
+@router.delete("/queue")
+def clear_workflow_queue(db: Session = Depends(get_db), user=RequireUser):
+    user_id = user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
+    stmt = delete(WorkflowQueue).where(WorkflowQueue.payload["user_id"].astext == user_id)
+    result = db.execute(stmt)
+    db.commit()
+    return {"status": "ok", "deleted": result.rowcount or 0}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import {
+  clearPipelineEvents,
+  clearWorkflowQueue,
   getPreferences,
   getResume,
   getSourceConfig,
@@ -44,6 +46,7 @@ export function App() {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [queueError, setQueueError] = useState<string | null>(null);
   const [loadingQueue, setLoadingQueue] = useState(false);
+  const [queueClearStatus, setQueueClearStatus] = useState<string | null>(null);
   const [configText, setConfigText] = useState("");
   const [configStatus, setConfigStatus] = useState<string | null>(null);
   const [pipelineStatus, setPipelineStatus] = useState<string | null>(null);
@@ -73,6 +76,7 @@ export function App() {
     }>
   >([]);
   const [eventsStatus, setEventsStatus] = useState<string | null>(null);
+  const [eventsClearStatus, setEventsClearStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState<string | null>(null);
@@ -120,6 +124,17 @@ export function App() {
       setQueueError("Unable to load queue");
     } finally {
       setLoadingQueue(false);
+    }
+  }
+
+  async function clearQueue() {
+    setQueueClearStatus("Clearing...");
+    try {
+      const res = await clearWorkflowQueue();
+      setQueue([]);
+      setQueueClearStatus(`Cleared ${res.deleted} tasks`);
+    } catch (err) {
+      setQueueClearStatus("Failed to clear queue");
     }
   }
 
@@ -210,6 +225,17 @@ export function App() {
       setEventsStatus(null);
     } catch (err) {
       setEventsStatus("Failed to load events");
+    }
+  }
+
+  async function clearEvents() {
+    setEventsClearStatus("Clearing...");
+    try {
+      const res = await clearPipelineEvents();
+      setEvents([]);
+      setEventsClearStatus(`Cleared ${res.deleted} events`);
+    } catch (err) {
+      setEventsClearStatus("Failed to clear events");
     }
   }
 
@@ -678,7 +704,11 @@ export function App() {
         <button type="button" onClick={loadEvents}>
           Refresh Events
         </button>
+        <button type="button" onClick={clearEvents}>
+          Clear Events
+        </button>
         {eventsStatus && <span>{eventsStatus}</span>}
+        {eventsClearStatus && <span>{eventsClearStatus}</span>}
       </div>
       {events.length === 0 && <p>No events yet.</p>}
       <ul>
@@ -739,7 +769,11 @@ export function App() {
         <button type="button" onClick={() => loadQueue(true)} disabled={loadingQueue}>
           {loadingQueue ? "Loading..." : "Refresh Failed"}
         </button>
+        <button type="button" onClick={clearQueue} disabled={loadingQueue}>
+          Clear Queue
+        </button>
       </div>
+      {queueClearStatus && <p>{queueClearStatus}</p>}
 
       {queueError && <p>{queueError}</p>}
       {!queueError && queue.length === 0 && <p>No queue items.</p>}

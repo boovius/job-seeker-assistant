@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
 from app.auth import RequireUser
@@ -36,3 +37,14 @@ def list_pipeline_events(limit: int = 50, db: Session = Depends(get_db), user=Re
         ],
         "count": len(items),
     }
+
+
+@router.delete("")
+def clear_pipeline_events(db: Session = Depends(get_db), user=RequireUser):
+    user_id = user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing user id")
+    stmt = delete(PipelineEvent).where(PipelineEvent.user_id == user_id)
+    result = db.execute(stmt)
+    db.commit()
+    return {"status": "ok", "deleted": result.rowcount or 0}

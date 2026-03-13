@@ -231,3 +231,29 @@ export async function listPipelineEvents(limit = 50) {
     count: number;
   }>;
 }
+
+export async function clearPipelineEvents() {
+  const res = await fetch(`${baseUrl}/pipeline-events`, {
+    method: "DELETE",
+    headers: await buildHeaders()
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<{ status: string; deleted: number }>;
+}
+
+export async function clearWorkflowQueue() {
+  const res = await fetch(`${baseUrl}/workflows/queue`, {
+    method: "DELETE",
+    headers: await buildHeaders()
+  });
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<{ status: string; deleted: number }>;
+}
