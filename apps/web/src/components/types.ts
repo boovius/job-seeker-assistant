@@ -1,7 +1,11 @@
 export type Job = {
   id: string;
+  canonical_url?: string | null;
   title?: string;
   company_name?: string;
+  location?: string | null;
+  remote_flag?: boolean | null;
+  description?: string | null;
   status?: string;
 };
 

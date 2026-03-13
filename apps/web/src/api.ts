@@ -48,7 +48,19 @@ export async function listJobs() {
     throw new Error(`Request failed: ${res.status}`);
   }
 
-  return res.json() as Promise<{ items: Array<{ id: string; title?: string; company_name?: string; status?: string }>; count: number }>;
+  return res.json() as Promise<{
+    items: Array<{
+      id: string;
+      canonical_url?: string | null;
+      title?: string;
+      company_name?: string;
+      location?: string | null;
+      remote_flag?: boolean | null;
+      description?: string | null;
+      status?: string;
+    }>;
+    count: number;
+  }>;
 }
 
 export async function listQueue(failedOnly = false) {

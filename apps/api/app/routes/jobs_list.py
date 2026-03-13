@@ -19,6 +19,8 @@ def list_jobs(db: Session = Depends(get_db), user=RequireUser):
                 "title": item.title,
                 "company_name": item.company_name,
                 "location": item.location,
+                "remote_flag": item.remote_flag,
+                "description": item.description,
                 "status": item.status,
                 "date_posted": item.date_posted,
             }
