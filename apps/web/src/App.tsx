@@ -19,20 +19,13 @@ import {
 } from "./api";
 import { supabase } from "./supabase";
 
-type Job = {
-  id: string;
-  title?: string;
-  company_name?: string;
-  status?: string;
-};
-
-type QueueItem = {
-  id: string;
-  task_type: string;
-  status: string;
-  attempts: number;
-  last_error?: string | null;
-};
+import type { Job, PipelineEvent, Preferences, QueueItem } from "./components/types";
+import { AuthPanel } from "./components/AuthPanel";
+import { Header } from "./components/Header";
+import { JobsTab } from "./components/JobsTab";
+import { PipelineTab } from "./components/PipelineTab";
+import { ProfileTab } from "./components/ProfileTab";
+import { Tabs } from "./components/Tabs";
 
 export function App() {
   const [url, setUrl] = useState("");
@@ -50,7 +43,7 @@ export function App() {
   const [configText, setConfigText] = useState("");
   const [configStatus, setConfigStatus] = useState<string | null>(null);
   const [pipelineStatus, setPipelineStatus] = useState<string | null>(null);
-  const [preferences, setPreferences] = useState({
+  const [preferences, setPreferences] = useState<Preferences>({
     location: "",
     work_mode: "",
     salary: "",
@@ -65,16 +58,7 @@ export function App() {
   const [valuesStatus, setValuesStatus] = useState<string | null>(null);
   const [resumeText, setResumeText] = useState<string>("");
   const [resumeStatus, setResumeStatus] = useState<string | null>(null);
-  const [events, setEvents] = useState<
-    Array<{
-      id: string;
-      event_type: string;
-      message?: string | null;
-      payload?: Record<string, unknown> | null;
-      created_at?: string;
-      task_id?: string | null;
-    }>
-  >([]);
+  const [events, setEvents] = useState<PipelineEvent[]>([]);
   const [eventsStatus, setEventsStatus] = useState<string | null>(null);
   const [eventsClearStatus, setEventsClearStatus] = useState<string | null>(null);
   const [email, setEmail] = useState("");
@@ -82,6 +66,7 @@ export function App() {
   const [authStatus, setAuthStatus] = useState<string | null>(null);
   const [authUser, setAuthUser] = useState<string | null>(null);
   const [authHasSession, setAuthHasSession] = useState(false);
+  const [activeTab, setActiveTab] = useState<"profile" | "pipeline" | "jobs">("profile");
   const [resetEmail, setResetEmail] = useState("");
   const [resetMode, setResetMode] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -412,392 +397,182 @@ export function App() {
     setAuthStatus("Signed out.");
   }
 
+  const theme = {
+    page: {
+      minHeight: "100vh",
+      background: "linear-gradient(180deg, #f7f3ee 0%, #f1f5f9 60%, #ffffff 100%)",
+      color: "#1f2937",
+      fontFamily: "'Alegreya', 'Source Serif 4', serif"
+    },
+    container: {
+      maxWidth: 1100,
+      margin: "0 auto",
+      padding: "32px 20px 60px"
+    },
+    card: {
+      background: "#ffffff",
+      border: "1px solid #e5e7eb",
+      borderRadius: 14,
+      padding: 18,
+      boxShadow: "0 12px 30px rgba(15, 23, 42, 0.06)"
+    },
+    header: {
+      display: "flex",
+      flexWrap: "wrap" as const,
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+      marginBottom: 18
+    },
+    title: {
+      fontSize: 34,
+      letterSpacing: "-0.5px",
+      margin: 0
+    },
+    subtitle: {
+      fontFamily: "'Recursive', 'Work Sans', sans-serif",
+      color: "#475569",
+      margin: "6px 0 0"
+    },
+    tabBar: {
+      display: "flex",
+      gap: 10,
+      flexWrap: "wrap" as const,
+      marginBottom: 18
+    },
+    tabButton: (active: boolean) => ({
+      border: active ? "1px solid #0f172a" : "1px solid #cbd5f5",
+      background: active ? "#0f172a" : "#f8fafc",
+      color: active ? "#f8fafc" : "#0f172a",
+      padding: "10px 16px",
+      borderRadius: 999,
+      fontFamily: "'Recursive', 'Work Sans', sans-serif",
+      letterSpacing: "0.2px",
+      cursor: "pointer",
+      transition: "all 0.2s ease"
+    }),
+    sectionTitle: {
+      fontFamily: "'Recursive', 'Work Sans', sans-serif",
+      fontSize: 20,
+      margin: "0 0 12px"
+    }
+  };
+
   return (
-    <div style={{ maxWidth: 980, margin: "40px auto", fontFamily: "Georgia, serif" }}>
-      <h1>Job Intelligence Agent</h1>
-      <div style={{ marginBottom: 24, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
-        <h2>Sign In</h2>
-        {authUser ? (
-          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <span>
-              Signed in as {authUser} {authHasSession ? "(session active)" : "(no session)"}
-            </span>
-            <button type="button" onClick={signOut}>
-              Sign Out
-            </button>
-          </div>
+    <div style={theme.page}>
+      <div style={theme.container}>
+        <Header authUser={authUser} onSignOut={signOut} theme={theme} />
+
+        {!authHasSession ? (
+          <AuthPanel
+            authUser={authUser}
+            authHasSession={authHasSession}
+            authStatus={authStatus}
+            email={email}
+            password={password}
+            resetEmail={resetEmail}
+            resetMode={resetMode}
+            newPassword={newPassword}
+            confirmPassword={confirmPassword}
+            onEmailChange={setEmail}
+            onPasswordChange={setPassword}
+            onResetEmailChange={setResetEmail}
+            onNewPasswordChange={setNewPassword}
+            onConfirmPasswordChange={setConfirmPassword}
+            onSignIn={signIn}
+            onSignUp={signUp}
+            onSignOut={signOut}
+            onResetPassword={resetPassword}
+            onCompletePasswordReset={completePasswordReset}
+            theme={theme}
+          />
         ) : (
-          <form onSubmit={signIn} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-              style={{ flex: "1 1 200px", padding: 8 }}
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              style={{ flex: "1 1 200px", padding: 8 }}
-            />
-            <button type="submit">Sign In</button>
-            <button type="button" onClick={signUp}>
-              Sign Up
-            </button>
-          </form>
-        )}
-        {authStatus && <p style={{ marginTop: 8 }}>{authStatus}</p>}
-        {!authUser && (
-          <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <input
-              type="email"
-              value={resetEmail}
-              onChange={(e) => setResetEmail(e.target.value)}
-              placeholder="Email for reset"
-              style={{ flex: "1 1 200px", padding: 8 }}
-            />
-            <button type="button" onClick={resetPassword}>
-              Send Reset Link
-            </button>
-          </div>
-        )}
-        {resetMode && (
-          <form onSubmit={completePasswordReset} style={{ marginTop: 16 }}>
-            <h3>Set New Password</h3>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="New password"
-                required
-                style={{ flex: "1 1 200px", padding: 8 }}
+          <>
+            <Tabs activeTab={activeTab} onTabChange={setActiveTab} theme={theme} />
+
+            {activeTab === "profile" && (
+              <ProfileTab
+                idealUrl={idealUrl}
+                idealWhy={idealWhy}
+                idealStatus={idealStatus}
+                onSubmitIdeal={onSubmitIdeal}
+                setIdealUrl={setIdealUrl}
+                setIdealWhy={setIdealWhy}
+                preferences={preferences}
+                setPreferences={setPreferences}
+                preferencesStatus={preferencesStatus}
+                savePreferences={savePreferences}
+                loadPreferences={loadPreferences}
+                coreValues={coreValues}
+                dreamJob={dreamJob}
+                valuesStatus={valuesStatus}
+                setCoreValues={setCoreValues}
+                setDreamJob={setDreamJob}
+                saveValues={saveValues}
+                loadValues={loadValues}
+                resumeText={resumeText}
+                resumeStatus={resumeStatus}
+                setResumeText={setResumeText}
+                saveResume={saveResume}
+                loadResume={loadResume}
+                theme={theme}
               />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm password"
-                required
-                style={{ flex: "1 1 200px", padding: 8 }}
-              />
-              <button type="submit">Update Password</button>
-            </div>
-            <p style={{ marginTop: 8, color: "#555" }}>Minimum 8 characters.</p>
-          </form>
-        )}
-      </div>
-      <p>Manual URL intake (Phase 1)</p>
-
-      <form onSubmit={onSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Job URL
-            <input
-              type="url"
-              required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              style={{ width: "100%", padding: 8, marginTop: 6 }}
-              placeholder="https://company.com/careers/role"
-            />
-          </label>
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Notes
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              style={{ width: "100%", padding: 8, marginTop: 6, minHeight: 100 }}
-              placeholder="Anything to remember about this role?"
-            />
-          </label>
-        </div>
-
-        <button type="submit" style={{ padding: "8px 14px" }}>
-          Submit
-        </button>
-      </form>
-
-      {status && <p style={{ marginTop: 16 }}>{status}</p>}
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Ideal Job Intake</h2>
-      <p style={{ color: "#555" }}>Provide a job URL and why it is ideal for you.</p>
-      <form onSubmit={onSubmitIdeal}>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Job URL
-            <input
-              type="url"
-              required
-              value={idealUrl}
-              onChange={(e) => setIdealUrl(e.target.value)}
-              style={{ width: "100%", padding: 8, marginTop: 6 }}
-              placeholder="https://company.com/careers/ideal-role"
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>
-            Why This Is Ideal
-            <textarea
-              value={idealWhy}
-              onChange={(e) => setIdealWhy(e.target.value)}
-              style={{ width: "100%", padding: 8, marginTop: 6, minHeight: 120 }}
-              placeholder="Describe why this role is a great fit for you."
-            />
-          </label>
-        </div>
-        <button type="submit" style={{ padding: "8px 14px" }}>
-          Save Ideal Job
-        </button>
-      </form>
-      {idealStatus && <p style={{ marginTop: 16 }}>{idealStatus}</p>}
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Core Preferences</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-        <label>
-          Location
-          <input
-            type="text"
-            value={preferences.location}
-            onChange={(e) => setPreferences({ ...preferences, location: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-          />
-        </label>
-        <label>
-          Work Mode (remote/hybrid/onsite)
-          <input
-            type="text"
-            value={preferences.work_mode}
-            onChange={(e) => setPreferences({ ...preferences, work_mode: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-          />
-        </label>
-        <label>
-          Salary (free text)
-          <input
-            type="text"
-            value={preferences.salary}
-            onChange={(e) => setPreferences({ ...preferences, salary: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-            placeholder="$140k+"
-          />
-        </label>
-        <label>
-          Salary Period
-          <select
-            value={preferences.salary_period}
-            onChange={(e) => setPreferences({ ...preferences, salary_period: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-          >
-            <option value="">Select period</option>
-            <option value="year">Year</option>
-            <option value="month">Month</option>
-            <option value="week">Week</option>
-            <option value="day">Day</option>
-            <option value="hour">Hour</option>
-          </select>
-        </label>
-        <label>
-          Sector
-          <input
-            type="text"
-            value={preferences.sector}
-            onChange={(e) => setPreferences({ ...preferences, sector: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-          />
-        </label>
-        <label>
-          Target Role
-          <input
-            type="text"
-            value={preferences.target_role}
-            onChange={(e) => setPreferences({ ...preferences, target_role: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-          />
-        </label>
-        <label>
-          Company Size
-          <input
-            type="text"
-            value={preferences.company_size}
-            onChange={(e) => setPreferences({ ...preferences, company_size: e.target.value })}
-            style={{ width: "100%", padding: 8, marginTop: 6 }}
-            placeholder="50-200"
-          />
-        </label>
-      </div>
-      <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
-        <button type="button" onClick={savePreferences}>
-          Save Preferences
-        </button>
-        <button type="button" onClick={loadPreferences}>
-          Reload
-        </button>
-        {preferencesStatus && <span>{preferencesStatus}</span>}
-      </div>
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Core Values</h2>
-      <label>
-        Values (one per line)
-        <textarea
-          value={coreValues}
-          onChange={(e) => setCoreValues(e.target.value)}
-          style={{ width: "100%", minHeight: 120, padding: 10, fontFamily: "monospace", marginTop: 6 }}
-        />
-      </label>
-      <label style={{ display: "block", marginTop: 12 }}>
-        Dream Job Description
-        <textarea
-          value={dreamJob}
-          onChange={(e) => setDreamJob(e.target.value)}
-          style={{ width: "100%", minHeight: 120, padding: 10, fontFamily: "monospace", marginTop: 6 }}
-        />
-      </label>
-      <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
-        <button type="button" onClick={saveValues}>
-          Save Values
-        </button>
-        <button type="button" onClick={loadValues}>
-          Reload
-        </button>
-        {valuesStatus && <span>{valuesStatus}</span>}
-      </div>
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Resume</h2>
-      <p style={{ color: "#555" }}>Paste a text version of your resume for query generation.</p>
-      <textarea
-        value={resumeText}
-        onChange={(e) => setResumeText(e.target.value)}
-        style={{ width: "100%", minHeight: 220, padding: 10, fontFamily: "monospace" }}
-        placeholder="Paste resume text here"
-      />
-      <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
-        <button type="button" onClick={saveResume}>
-          Save Resume
-        </button>
-        <button type="button" onClick={loadResume}>
-          Reload
-        </button>
-        {resumeStatus && <span>{resumeStatus}</span>}
-      </div>
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Pipeline Events</h2>
-      <div style={{ display: "flex", gap: 8, marginBottom: 10, alignItems: "center" }}>
-        <button type="button" onClick={loadEvents}>
-          Refresh Events
-        </button>
-        <button type="button" onClick={clearEvents}>
-          Clear Events
-        </button>
-        {eventsStatus && <span>{eventsStatus}</span>}
-        {eventsClearStatus && <span>{eventsClearStatus}</span>}
-      </div>
-      {events.length === 0 && <p>No events yet.</p>}
-      <ul>
-        {events.map((event) => (
-          <li key={event.id}>
-            <div>
-              <strong>{event.event_type}</strong>
-              {event.message ? ` — ${event.message}` : ""}
-            </div>
-            <div style={{ color: "#555", fontSize: 14 }}>
-              {event.created_at ? `At ${new Date(event.created_at).toLocaleString()}` : "Time unknown"}
-              {event.task_id ? ` · Task ${event.task_id}` : ""}
-            </div>
-            {event.payload && (
-              <details style={{ marginTop: 6 }}>
-                <summary>Payload</summary>
-                <pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>
-                  {JSON.stringify(event.payload, null, 2)}
-                </pre>
-              </details>
             )}
-          </li>
-        ))}
-      </ul>
 
-      <hr style={{ margin: "32px 0" }} />
+            {activeTab === "pipeline" && (
+              <PipelineTab
+                pipelineStatus={pipelineStatus}
+                runPipelineNow={runPipelineNow}
+                events={events}
+                eventsStatus={eventsStatus}
+                eventsClearStatus={eventsClearStatus}
+                loadEvents={loadEvents}
+                clearEvents={clearEvents}
+                queue={queue}
+                queueError={queueError}
+                queueClearStatus={queueClearStatus}
+                loadingQueue={loadingQueue}
+                loadQueue={loadQueue}
+                clearQueue={clearQueue}
+                configText={configText}
+                configStatus={configStatus}
+                setConfigText={setConfigText}
+                saveConfig={saveConfig}
+                loadConfig={loadConfig}
+                theme={theme}
+              />
+          )}
 
-      <h2>Source Config</h2>
-      <p style={{ color: "#555" }}>Edit YAML to change keyword profiles and enabled sources.</p>
-      <textarea
-        value={configText}
-        onChange={(e) => setConfigText(e.target.value)}
-        style={{ width: "100%", minHeight: 240, padding: 10, fontFamily: "monospace" }}
-      />
-      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-        <button type="button" onClick={saveConfig}>
-          Save Config
-        </button>
-        <button type="button" onClick={loadConfig}>
-          Reload Config
-        </button>
-        {configStatus && <span>{configStatus}</span>}
+            {activeTab === "jobs" && (
+            <JobsTab
+              jobs={jobs}
+              jobsError={jobsError}
+              url={url}
+              notes={notes}
+              status={status}
+              onSubmit={onSubmit}
+              setUrl={setUrl}
+              setNotes={setNotes}
+              theme={theme}
+            />
+          )}
+        </>
+      )}
+        <style>
+          {`
+            .pipeline-grid {
+              display: grid;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              gap: 24px;
+            }
+            @media (max-width: 900px) {
+              .pipeline-grid {
+                grid-template-columns: 1fr;
+              }
+            }
+          `}
+        </style>
       </div>
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Queue Status</h2>
-      <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "center" }}>
-        <button type="button" onClick={runPipelineNow}>
-          Run Pipeline
-        </button>
-        {pipelineStatus && <span>{pipelineStatus}</span>}
-      </div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        <button type="button" onClick={() => loadQueue(false)} disabled={loadingQueue}>
-          {loadingQueue ? "Loading..." : "Refresh All"}
-        </button>
-        <button type="button" onClick={() => loadQueue(true)} disabled={loadingQueue}>
-          {loadingQueue ? "Loading..." : "Refresh Failed"}
-        </button>
-        <button type="button" onClick={clearQueue} disabled={loadingQueue}>
-          Clear Queue
-        </button>
-      </div>
-      {queueClearStatus && <p>{queueClearStatus}</p>}
-
-      {queueError && <p>{queueError}</p>}
-      {!queueError && queue.length === 0 && <p>No queue items.</p>}
-      <ul>
-        {queue.map((item) => (
-          <li key={item.id}>
-            <strong>{item.task_type}</strong> — {item.status} (attempts: {item.attempts})
-            {item.last_error ? ` — ${item.last_error}` : ""}
-          </li>
-        ))}
-      </ul>
-
-      <hr style={{ margin: "32px 0" }} />
-
-      <h2>Job List</h2>
-      {jobsError && <p>{jobsError}</p>}
-      {!jobsError && jobs.length === 0 && <p>No jobs yet.</p>}
-      <ul>
-        {jobs.map((job) => (
-          <li key={job.id}>
-            <strong>{job.title || "Untitled Role"}</strong> — {job.company_name || "Unknown Company"} ({job.status || "new"})
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
