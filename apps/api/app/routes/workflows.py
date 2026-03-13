@@ -87,7 +87,6 @@ def run_pipeline(
         payload={"profiles": [profile.model_dump() for profile in profiles.search_profiles]},
         user_id=user_id,
     )
-    import pdb; pdb.set_trace();
     updated_sources = apply_profiles_to_sources(db, user_id, profiles)
     log_event(
         db,
