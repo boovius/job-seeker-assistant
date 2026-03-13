@@ -51,6 +51,14 @@ Steps:
 - This plan allows progress without external network dependencies.
 - Once Supabase DNS resolves, switch the `DATABASE_URL` back and re-run migrations.
 
+## Scoring (Planned)
+
+We plan to add a `score_job` task that runs after `fetch_detail` to compute a fit score per job.
+The score will be stored directly on the `jobs` record along with a structured breakdown payload.
+Ideal job submissions will be a strong signal **only when job description text is present**.
+
+See `scoring.md` for details and proposed weighting.
+
 ## Future: Resume Chunking + Embeddings
 Goal: make resume text usable for RAG/scoring by chunking into semantic sections and storing embeddings.
 
