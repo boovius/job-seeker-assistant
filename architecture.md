@@ -113,6 +113,44 @@ Pipeline steps emit structured events into a `pipeline_events` table. This provi
 
 The web UI can display recent events via `GET /pipeline-events`.
 
+## Pipeline Flow (UI -> API -> Worker)
+
+```mermaid
+sequenceDiagram
+  participant UI as Web UI
+  participant API as FastAPI
+  participant DB as Postgres
+  participant LLM as LLM Provider
+  participant Q as workflow_queue
+  participant W as Worker
+  participant A as Source Adapters
+
+  UI->>API: POST /workflows/run-pipeline
+  API->>DB: Load user prefs/values/resume
+  API->>LLM: Generate search_profiles (prompt)
+  LLM-->>API: search_profiles JSON
+  API->>DB: Store profiles in UserSource.filters
+  API->>Q: Enqueue fetch_listings (per enabled source)
+  API->>DB: Log pipeline_events (llm_profiles, profiles_applied, pipeline_enqueued)
+
+  W->>Q: Claim next task (fetch_listings)
+  W->>DB: Log task_claimed
+  W->>A: fetch_listings (Jooble/Adzuna/etc)
+  A-->>W: Raw listings
+  W->>Q: Enqueue fetch_detail (per listing)
+  W->>DB: Log fetch_listings_start/fetch_listings_done
+
+  W->>Q: Claim fetch_detail
+  W->>A: fetch_job_detail + normalize
+  A-->>W: Normalized job
+  W->>DB: Upsert jobs
+  W->>DB: Log fetch_detail_done
+
+  UI->>API: GET /jobs, /pipeline-events, /queue
+  API->>DB: Read jobs/events/queue
+  API-->>UI: Render results + event trail
+```
+
 ## Scheduling Options (Periodic Pipeline)
 
 Option 1: Local scheduler (CLI + cron).
