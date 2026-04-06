@@ -29,6 +29,20 @@ sources:
     config:
       companies: []
 
+  climatebase:
+    adapter: climatebase_v1
+    kind: job_board
+    base_url: https://climatebase.org
+    enabled: true
+    config:
+      search_profiles:
+        - role_keywords:
+            - technical product manager
+          sector_keywords:
+            - climate
+          location: Los Angeles, CA
+          remote: true
+
   remotive:
     adapter: remotive_api_v1
     kind: job_board
