@@ -301,3 +301,8 @@ The pipeline can use an LLM to generate `search_profiles` from user preferences 
 - `VITE_API_BASE_URL` (for web)
 - `VITE_SUPABASE_URL` (for web auth)
 - `VITE_SUPABASE_ANON_KEY` (for web auth)
+
+
+## Supporting docs
+- `docs/job-opportunity-scoring-rubric.md` — reusable scoring framework for evaluating future climate job opportunities
+- `templates/job-opportunity-scorecard.md` — lightweight template for scoring individual roles
