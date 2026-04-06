@@ -9,6 +9,7 @@ type JobsTabProps = {
   notes: string;
   status: string | null;
   onSubmit: (event: React.FormEvent) => void;
+  onRefreshJobs?: () => void;
   setUrl: (value: string) => void;
   setNotes: (value: string) => void;
   theme: {
@@ -24,6 +25,7 @@ export function JobsTab({
   notes,
   status,
   onSubmit,
+  onRefreshJobs,
   setUrl,
   setNotes,
   theme
@@ -75,7 +77,14 @@ export function JobsTab({
 
       <hr style={{ margin: "32px 0" }} />
 
-      <h2 style={theme.sectionTitle}>Job List</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+        <h2 style={theme.sectionTitle}>Job List</h2>
+        {onRefreshJobs && (
+          <button type="button" onClick={onRefreshJobs}>
+            Refresh Jobs
+          </button>
+        )}
+      </div>
       {jobsError && <p>{jobsError}</p>}
       {!jobsError && jobs.length === 0 && <p>No jobs yet.</p>}
       <ul>

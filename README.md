@@ -249,6 +249,18 @@ The web UI uses Supabase Auth to sign in and obtains a JWT for API requests.
 The UI includes a “Run Pipeline” button that enqueues all enabled sources for the signed-in user and runs a few worker cycles on the API.
 - Endpoint: `POST /workflows/run-pipeline` with `{ "run_worker": true, "max_cycles": 5 }`
 - This is user-scoped and uses the signed-in user ID from the JWT.
+- In this single-user vertical slice, the worker cycles run inline before the response returns, so the jobs/events views are immediately reviewable after the button completes.
+
+## Climatebase Single-User E2E Slice
+The cleanest currently supported end-to-end path is:
+1. Sign in as one user.
+2. Save a source config that keeps `climatebase` enabled with at least one `search_profiles` entry.
+3. Click **Run Pipeline** in the UI, or run `python scripts/cli.py run-pipeline --max-cycles 5` after seeding sources for a user.
+4. Review results in:
+   - **Pipeline Events** for fetch/upsert traceability
+   - **Job List** for the normalized canonical records that were upserted
+
+This path is intentionally honest about Climatebase v1: it ingests the public jobs index metadata and normalizes/upserts that into the canonical `jobs` table without pretending to have logged-in detail scraping.
 
 ## Pipeline Events (Logging)
 The pipeline now records structured events in the `pipeline_events` table and exposes them in the UI.

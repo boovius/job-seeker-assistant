@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
@@ -57,7 +57,6 @@ def enqueue_fetch_listings(payload: dict, db: Session = Depends(get_db), user=Re
 @router.post("/run-pipeline")
 def run_pipeline(
     payload: dict,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user=RequireUser,
 ):
@@ -87,7 +86,6 @@ def run_pipeline(
         payload={"profiles": [profile.model_dump() for profile in profiles.search_profiles]},
         user_id=user_id,
     )
-    import pdb; pdb.set_trace();
     updated_sources = apply_profiles_to_sources(db, user_id, profiles)
     log_event(
         db,
@@ -111,7 +109,7 @@ def run_pipeline(
     )
 
     if run_worker:
-        background_tasks.add_task(_run_worker_cycles, int(max_cycles))
+        _run_worker_cycles(int(max_cycles))
 
     return {
         "status": "queued",

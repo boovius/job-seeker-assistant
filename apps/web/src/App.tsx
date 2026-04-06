@@ -238,10 +238,18 @@ export function App() {
     }
   }
 
+  async function loadJobs() {
+    try {
+      const res = await listJobs();
+      setJobs(res.items);
+      setJobsError(null);
+    } catch (err) {
+      setJobsError("Unable to load jobs");
+    }
+  }
+
   useEffect(() => {
-    listJobs()
-      .then((res) => setJobs(res.items))
-      .catch(() => setJobsError("Unable to load jobs"));
+    loadJobs();
   }, []);
 
   useEffect(() => {
@@ -267,13 +275,13 @@ export function App() {
       setPipelineStatus(
         `${detail} (worker: ${res.run_worker ? "yes" : "no"}, cycles: ${res.max_cycles ?? 0})`
       );
-      await loadQueue(true);
-      const jobsRes = await listJobs();
-      setJobs(jobsRes.items);
+      await loadQueue(false);
+      await loadEvents();
+      await loadJobs();
     } catch (err) {
-    setPipelineStatus("Failed to run pipeline");
+      setPipelineStatus("Failed to run pipeline");
+    }
   }
-}
 
   useEffect(() => {
     const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
@@ -324,9 +332,7 @@ export function App() {
     setAuthHasSession(true);
     loadConfig();
     loadQueue(true);
-    listJobs()
-      .then((res) => setJobs(res.items))
-      .catch(() => setJobsError("Unable to load jobs"));
+    loadJobs();
   }
 
   async function signUp(e: React.FormEvent) {
@@ -551,6 +557,7 @@ export function App() {
               notes={notes}
               status={status}
               onSubmit={onSubmit}
+              onRefreshJobs={loadJobs}
               setUrl={setUrl}
               setNotes={setNotes}
               theme={theme}

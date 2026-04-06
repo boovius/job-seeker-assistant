@@ -9,7 +9,7 @@ class Settings:
     database_url: str = os.getenv("DATABASE_URL", "")
 
     api_local_debug: bool = os.getenv("API_LOCAL_DEBUG", "").lower() in {"1", "true", "yes"}
-    api_local_debug_user_id: str = os.getenv("API_LOCAL_DEBUG_USER_ID", "local-debug-user")
+    api_local_debug_user_id: str = os.getenv("API_LOCAL_DEBUG_USER_ID", "00000000-0000-0000-0000-000000000001")
 
     supabase_jwt_secret: str = os.getenv("SUPABASE_JWT_SECRET", "")
     supabase_project_ref: str = os.getenv("SUPABASE_PROJECT_REF", "")
