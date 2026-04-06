@@ -29,6 +29,31 @@ sources:
     config:
       companies: []
 
+  climatebase:
+    adapter: climatebase_v1
+    kind: job_board
+    base_url: https://climatebase.org
+    enabled: true
+    config:
+      search_profiles:
+        - role_keywords:
+            - technical product manager
+          sector_keywords:
+            - climate
+          location: Los Angeles, CA
+          remote: true
+
+  gmail_climatebase:
+    adapter: gmail_climatebase_v1
+    kind: inbox
+    base_url: https://gmail.googleapis.com
+    enabled: false
+    config:
+      gmail_query: from:(climatebase.org) newer_than:30d
+      max_messages: 20
+      processed_message_window: 200
+      gmail_access_token_env: GMAIL_ACCESS_TOKEN
+
   remotive:
     adapter: remotive_api_v1
     kind: job_board

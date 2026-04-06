@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from app.services.adapters.adzuna import AdzunaAdapter
 from app.services.adapters.base import SourceAdapter
+from app.services.adapters.climatebase import ClimatebaseAdapter
+from app.services.adapters.gmail_climatebase import GmailClimatebaseAdapter
 from app.services.adapters.greenhouse import GreenhouseAdapter
 from app.services.adapters.jooble import JoobleAdapter
 from app.services.adapters.lever import LeverAdapter
@@ -11,6 +13,8 @@ from app.services.adapters.remotive import RemotiveAdapter
 ADAPTER_REGISTRY: dict[str, type[SourceAdapter]] = {
     "greenhouse_job_board_v1": GreenhouseAdapter,
     "lever_postings_v1": LeverAdapter,
+    "climatebase_v1": ClimatebaseAdapter,
+    "gmail_climatebase_v1": GmailClimatebaseAdapter,
     "remotive_api_v1": RemotiveAdapter,
     "adzuna_api_v1": AdzunaAdapter,
     "jooble_api_v1": JoobleAdapter,

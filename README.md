@@ -257,11 +257,13 @@ The pipeline now records structured events in the `pipeline_events` table and ex
 - Example events: task claimed, listings fetched, job upserted, task failed
 
 ## Automated Discovery Sources (Phase 1)
-We currently support Greenhouse, Lever, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Remotive/Adzuna/Jooble support keyword discovery.
+We currently support Greenhouse, Lever, Climatebase, Gmail-based Climatebase discovery, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Climatebase/Remotive/Adzuna/Jooble support keyword discovery; Gmail-based Climatebase discovery searches Gmail for recommendation emails and hands extracted Climatebase links into the existing Climatebase detail/upsert flow.
 
 Examples:
 - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`
 - Lever: `https://api.lever.co/v0/postings/{company}`
+- Climatebase: `https://climatebase.org/jobs`
+- Gmail discovery: `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=from:(climatebase.org) newer_than:30d`
 - Remotive: `https://remotive.com/api/remote-jobs?search={keyword}`
 - Adzuna: `https://api.adzuna.com/v1/api/jobs/{country}/search/1?what={keyword}`
 - Jooble: `https://jooble.org/api/{api_key}` (POST body includes keywords)
@@ -269,7 +271,23 @@ Examples:
 Configuration notes:
 - Source settings live in `config/sources.yaml` or the DB-backed UI editor.
 - Secrets (Adzuna/Jooble keys) are read from `.env` and merged at save/seed time.
+- Gmail discovery reads an OAuth access token from `GMAIL_ACCESS_TOKEN` and only needs the `https://www.googleapis.com/auth/gmail.readonly` scope.
 - Use `search_profiles` to combine role + sector keywords with an optional location.
+
+### Gmail-based Climatebase setup (local v1)
+1. In Google Cloud, create an OAuth client for a desktop app and enable the Gmail API.
+2. Request the least-privilege scope: `https://www.googleapis.com/auth/gmail.readonly`.
+3. Obtain a user access token for the Gmail account that receives Climatebase recommendation emails.
+4. Export the token before running the pipeline:
+   ```bash
+   export GMAIL_ACCESS_TOKEN="ya29..."
+   ```
+5. Enable `gmail_climatebase` in `config/sources.yaml` (or the DB-backed source config) and tune `gmail_query` to match the real sender/subject pattern if needed.
+6. Seed/apply sources, enqueue the pipeline, and run the worker. The Gmail adapter will discover Climatebase links from matching messages, then enqueue those links into the existing `fetch_detail` worker path using the `climatebase` source.
+
+Notes:
+- The v1 implementation intentionally uses a short-lived access token for local runs rather than a full refresh-token/oauth callback flow.
+- Message-level idempotency is tracked in `source_cursors.cursor.processed_message_ids`, while canonical job dedupe still happens at the `jobs.canonical_url` layer.
 
 ## First-Time Setup Checklist
 Accounts / services:
