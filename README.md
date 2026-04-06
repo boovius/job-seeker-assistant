@@ -249,6 +249,18 @@ The web UI uses Supabase Auth to sign in and obtains a JWT for API requests.
 The UI includes a “Run Pipeline” button that enqueues all enabled sources for the signed-in user and runs a few worker cycles on the API.
 - Endpoint: `POST /workflows/run-pipeline` with `{ "run_worker": true, "max_cycles": 5 }`
 - This is user-scoped and uses the signed-in user ID from the JWT.
+- In this single-user vertical slice, the worker cycles run inline before the response returns, so the jobs/events views are immediately reviewable after the button completes.
+
+## Climatebase Single-User E2E Slice
+The cleanest currently supported end-to-end path is:
+1. Sign in as one user.
+2. Save a source config that keeps `climatebase` enabled with at least one `search_profiles` entry.
+3. Click **Run Pipeline** in the UI, or run `python scripts/cli.py run-pipeline --max-cycles 5` after seeding sources for a user.
+4. Review results in:
+   - **Pipeline Events** for fetch/upsert traceability
+   - **Job List** for the normalized canonical records that were upserted
+
+This path is intentionally honest about Climatebase v1: it ingests the public jobs index metadata and normalizes/upserts that into the canonical `jobs` table without pretending to have logged-in detail scraping.
 
 ## Pipeline Events (Logging)
 The pipeline now records structured events in the `pipeline_events` table and exposes them in the UI.
@@ -257,11 +269,12 @@ The pipeline now records structured events in the `pipeline_events` table and ex
 - Example events: task claimed, listings fetched, job upserted, task failed
 
 ## Automated Discovery Sources (Phase 1)
-We currently support Greenhouse, Lever, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Remotive/Adzuna/Jooble support keyword discovery.
+We currently support Greenhouse, Lever, Climatebase, Remotive, Adzuna, and Jooble adapters. Greenhouse/Lever use company slugs; Climatebase/Remotive/Adzuna/Jooble support keyword discovery.
 
 Examples:
 - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`
 - Lever: `https://api.lever.co/v0/postings/{company}`
+- Climatebase: `https://climatebase.org/jobs` (server-rendered `__NEXT_DATA__` payload parsed from public search pages)
 - Remotive: `https://remotive.com/api/remote-jobs?search={keyword}`
 - Adzuna: `https://api.adzuna.com/v1/api/jobs/{country}/search/1?what={keyword}`
 - Jooble: `https://jooble.org/api/{api_key}` (POST body includes keywords)
@@ -270,6 +283,7 @@ Configuration notes:
 - Source settings live in `config/sources.yaml` or the DB-backed UI editor.
 - Secrets (Adzuna/Jooble keys) are read from `.env` and merged at save/seed time.
 - Use `search_profiles` to combine role + sector keywords with an optional location.
+- Climatebase v1 intentionally ingests the public jobs index only. It captures listing metadata (title, company, locations, sectors, remote preferences, salary hints) without browser automation or logged-in detail scraping.
 
 ## First-Time Setup Checklist
 Accounts / services:
@@ -301,3 +315,8 @@ The pipeline can use an LLM to generate `search_profiles` from user preferences 
 - `VITE_API_BASE_URL` (for web)
 - `VITE_SUPABASE_URL` (for web auth)
 - `VITE_SUPABASE_ANON_KEY` (for web auth)
+
+
+## Supporting docs
+- `docs/job-opportunity-scoring-rubric.md` — reusable scoring framework for evaluating future climate job opportunities
+- `templates/job-opportunity-scorecard.md` — lightweight template for scoring individual roles

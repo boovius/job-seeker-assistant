@@ -24,7 +24,7 @@ class LLMSearchProfiles(BaseModel):
     search_profiles: list[SearchProfile] = Field(default_factory=list)
 
 
-KEYWORD_ADAPTERS = {"remotive_api_v1", "adzuna_api_v1", "jooble_api_v1"}
+KEYWORD_ADAPTERS = {"climatebase_v1", "remotive_api_v1", "adzuna_api_v1", "jooble_api_v1"}
 
 
 def _fallback_profiles(pref: Any | None) -> LLMSearchProfiles:
