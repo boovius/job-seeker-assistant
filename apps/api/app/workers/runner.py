@@ -64,6 +64,16 @@ def _get_source_context(db: Session, source_id: str, user_id: str):
     return source, user_source
 
 
+def _get_source_by_slug(db: Session, user_id: str, slug: str):
+    return (
+        db.query(Source, UserSource)
+        .join(UserSource, UserSource.source_id == Source.id)
+        .filter(UserSource.user_id == user_id)
+        .filter(Source.slug == slug)
+        .first()
+    )
+
+
 def _get_cursor(db: Session, source_id: str, user_id: str) -> SourceCursor:
     cursor = (
         db.query(SourceCursor)
@@ -82,7 +92,7 @@ def _get_cursor(db: Session, source_id: str, user_id: str) -> SourceCursor:
 def _redact_config(config: dict) -> dict:
     redacted = {}
     for key, value in (config or {}).items():
-        if key in {"api_key", "app_key", "app_id"}:
+        if key in {"api_key", "app_key", "app_id", "gmail_access_token", "gmail_refresh_token", "client_secret"}:
             redacted[key] = "<redacted>" if value else None
             continue
         redacted[key] = value
@@ -124,6 +134,17 @@ def _build_request_specs(adapter: str, config: dict, query_sets: list[dict]) -> 
                 payload["location"] = qs["location"]
             specs.append({"method": "POST", "url": url, "json": payload})
         return specs
+    if adapter == "gmail_climatebase_v1":
+        return [
+            {
+                "method": "GET",
+                "url": "https://gmail.googleapis.com/gmail/v1/users/me/messages",
+                "params": {
+                    "q": (config or {}).get("gmail_query", "from:(climatebase.org) newer_than:30d"),
+                    "maxResults": (config or {}).get("max_messages", 20),
+                },
+            }
+        ]
     return []
 
 
@@ -136,14 +157,16 @@ def _build_listings_preview(listings: list[RawListing], limit: int = 5) -> list[
                 "company": listing.company_hint,
                 "location": listing.location_hint,
                 "url": listing.url,
+                "target_source_slug": (listing.raw_payload or {}).get("target_source_slug"),
             }
         )
     return preview
 
 
-def _enqueue_fetch_detail(db: Session, listing: RawListing, source_id: str, user_id: str) -> None:
+def _enqueue_fetch_detail(db: Session, listing: RawListing, source_id: str, user_id: str, detail_source_id: str | None = None) -> None:
     payload = {
-        "source_id": source_id,
+        "source_id": detail_source_id or source_id,
+        "discovered_from_source_id": source_id,
         "user_id": user_id,
         "listing": {
             "url": listing.url,
@@ -157,6 +180,19 @@ def _enqueue_fetch_detail(db: Session, listing: RawListing, source_id: str, user
     }
     task = WorkflowQueue(task_type="fetch_detail", payload=payload, status="queued")
     db.add(task)
+
+
+def _resolve_detail_source_id(db: Session, user_id: str, source_id: str, listing: RawListing) -> str:
+    raw_payload = listing.raw_payload or {}
+    target_source_slug = raw_payload.get("target_source_slug")
+    if not target_source_slug:
+        return source_id
+
+    row = _get_source_by_slug(db, user_id, target_source_slug)
+    if not row:
+        raise ValueError(f"Missing enabled source for target_source_slug={target_source_slug}")
+    source, _ = row
+    return str(source.id)
 
 
 def _upsert_job(db: Session, job: dict) -> None:
@@ -211,7 +247,8 @@ def _handle_fetch_listings(db: Session, task: WorkflowQueue) -> int:
 
     listings, updated = adapter.fetch_listings(registry, FetchCursor(cursor.cursor or {}))
     for listing in listings:
-        _enqueue_fetch_detail(db, listing, source_id, user_id)
+        detail_source_id = _resolve_detail_source_id(db, user_id, source_id, listing)
+        _enqueue_fetch_detail(db, listing, source_id, user_id, detail_source_id=detail_source_id)
 
     cursor.cursor = updated.state
     db.add(cursor)
@@ -277,7 +314,12 @@ def _handle_fetch_detail(db: Session, task: WorkflowQueue) -> None:
         db,
         event_type="fetch_detail_done",
         message="Upserted job",
-        payload={"source_id": str(source.id), "canonical_url": normalized.canonical_url},
+        payload={
+            "source_id": str(source.id),
+            "canonical_url": normalized.canonical_url,
+            "discovered_from_source_id": payload.get("discovered_from_source_id"),
+            "gmail_provenance": (listing.raw_payload or {}).get("gmail_provenance"),
+        },
         user_id=user_id,
         task_id=str(task.id),
     )
