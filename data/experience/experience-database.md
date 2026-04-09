@@ -57,10 +57,12 @@ _Last updated: 2026-04-06_
 - **Dates:** 2016–2021
 - **Location:** New York, NY
 - **Title progression:** Started as Software Engineer in 2016, promoted to Senior Software Engineer in 2019, and took on Engineering Manager responsibilities in May 2021; senior engineering and engineering management titles overlapped.
+- **Operating model:** Agile-XP consultancy with heavy emphasis on TDD, pair programming, one-week sprints, and continuous delivery cycles.
 - **Summary:** Product-focused technologist and lead engineer delivering complex mobile and web applications across multiple consulting engagements, balancing velocity with maintainability while growing from contributor to team lead and engineering manager.
 - **Responsibilities / evidence:**
   - Managed development teams
   - Led design and delivery of data-intensive APIs and integrations
+  - Worked in an Agile-XP environment centered on TDD, pair programming, one-week iterations, and continuous delivery
   - Conducted performance reviews
   - Mentored engineers
   - Established best practices for sustainable delivery
@@ -70,8 +72,8 @@ _Last updated: 2026-04-06_
   - **Jetblack / Walmart Labs (2019):** Engineering team lead for a 5-person squad building a greenfield app to coordinate last-mile delivery for a high-end boutique consumer goods delivery service. Although the project was cut short when the company folded earlier than expected, led the engineering team in task delivery, hands-on engineering, teamwork, project planning, and product discovery/observation; helped align the team with the broader organization and coordinated closely with DevOps, machine learning, and other adjacent teams.
   - **JOOR (Fall 2017–Spring 2018):** Python contributor to an ETL pipeline ingesting and normalizing large volumes of client data; contributed to DevOps modernization including early Kubernetes orchestration and Docker containerization; led and coached QA engineers to modernize their work
   - **Casper / NYC Landlords / FloodHelp (2016):** Contributor across multiple early client engagements, including FloodHelp, a flood insurance warning/information tool for NYC residents in collaboration with IDEO
-- **Keywords / tags:** engineering management, senior software engineer, consulting, team lead, delivery, Python, ETL, Kubernetes, Docker, React, product discovery, logistics, last-mile delivery, QA modernization, mentoring, cross-functional
-- **Source(s):** Resume 2026-04-06; user clarification 2026-04-06
+- **Keywords / tags:** engineering management, senior software engineer, consulting, Agile-XP, TDD, pair programming, one-week sprints, continuous delivery, team lead, delivery, Python, ETL, Kubernetes, Docker, React, product discovery, logistics, last-mile delivery, QA modernization, mentoring, cross-functional
+- **Source(s):** Resume 2026-04-06; user clarification 2026-04-06; user clarification 2026-04-08
 - **Ambiguities / follow-up needed:**
   - What delivery/project management responsibilities should be called out explicitly across these engagements?
   - Any concrete outcomes, launch results, or scale metrics for Facebook, Pager, Jetblack, JOOR, or FloodHelp?
