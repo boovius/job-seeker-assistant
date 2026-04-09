@@ -16,29 +16,21 @@
 
 #let role(title, meta) = [
   #v(0.35em)
-  #text(weight: "bold")[#title]
-  #h(1fr)
-  #text(style: "italic")[#meta]
+  #grid(columns: (1fr, auto),[
+    #text(weight: "bold")[#title]
+  ],[
+    #text(style: "italic")[#meta]
+  ])
   #v(0.15em)
 ]
-
-#let bullets(items) = items.map(item => [#list(marker: [•], tight: true)[#item]])
 
 #align(center)[
   #text(weight: "bold", size: 18pt)[Joshua Book]
 ]
 
-#align(center)[
-  Pasadena, CA
-]
-
-#align(center)[
-  #link("mailto:joshua.book@gmail.com")[joshua.book@gmail.com] · 631-355-6566
-]
-
-#align(center)[
-  #link("https://linkedin.com/in/joshuacbook")[linkedin.com/in/joshuacbook] · #link("https://github.com/boovius")[github.com/boovius]
-]
+#align(center)[Pasadena, CA]
+#align(center)[#link("mailto:joshua.book@gmail.com")[joshua.book\/@gmail.com] · 631-355-6566]
+#align(center)[#link("https://linkedin.com/in/joshuacbook")[linkedin.com/in/joshuacbook] · #link("https://github.com/boovius")[github.com/boovius]]
 
 #section[Professional Summary]
 Technical product and engineering leader with 12+ years of experience turning ambiguous ideas into shipped mobile and web software. Strong track record leading cross-functional teams across product, engineering, design, QA, and operations to shape roadmap, clarify requirements, coordinate execution, and improve quality through launch and iteration. Combines deep technical fluency with product judgment, systems thinking, and a mission-driven orientation toward technology with real-world public impact.
@@ -69,33 +61,25 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 
 #section[Experience]
 #role[Book Bites Inc. — Founder / Technical Consultant][Remote | 2021–Present]
-#bullets((
-  [Provide product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through execution and iteration.],
-  [Lead product management for the New York City Campaign Finance Board’s Contribute app across a team of 3 engineers and client stakeholders, translating goals and constraints into roadmap decisions, scoped work, and shipped improvements.],
-  [Drive roadmap development, prioritization, customer research, data analysis, and product requirements documentation to move work from concept to delivery.],
-  [Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization and senior iOS delivery across client engagements.],
-))
+- Provide product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through execution and iteration.
+- Lead product management for the New York City Campaign Finance Board’s Contribute app across a team of 3 engineers and client stakeholders, translating goals and constraints into roadmap decisions, scoped work, and shipped improvements.
+- Drive roadmap development, prioritization, customer research, data analysis, and product requirements documentation to move work from concept to delivery.
+- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization and senior iOS delivery across client engagements.
 
 #role[Frequency Machine — Head of Product Management / Engineering Lead (Cerca)][Remote | 2021–2024]
-#bullets((
-  [Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.],
-  [Led product discovery, customer research, and design sessions, serving as a bridge across engineering, design, operations, communications, and business stakeholders.],
-  [Managed early hiring across engineering and design while performing hands-on engineering and leading delivery for a team of up to 3 engineers.],
-  [Improved app startup time by 400% for users active in multiple conversations by redesigning Twilio-driven chat state handling to avoid unnecessary processing at launch.],
-))
+- Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.
+- Led product discovery, customer research, and design sessions, serving as a bridge across engineering, design, operations, communications, and business stakeholders.
+- Managed early hiring across engineering and design while performing hands-on engineering and leading delivery for a team of up to 3 engineers.
+- Improved app startup time by 400% for users active in multiple conversations by redesigning Twilio-driven chat state handling to avoid unnecessary processing at launch.
 
 #role[Def Method — Senior Software Engineer / Engineering Manager][New York, NY | 2016–2021]
-#bullets((
-  [Delivered complex client software engagements across mobile, web, data, and platform systems, growing from software engineer to senior engineer and later adding engineering management responsibilities within an Agile-XP consultancy centered on TDD, pair programming, one-week sprints, and continuous delivery.],
-  [Led a 5-engineer squad for Jetblack / Walmart Labs building a greenfield last-mile logistics coordination product, driving planning, hands-on engineering, and cross-team coordination.],
-  [Contributed across Facebook and JOOR engagements spanning product discovery, React frontend development, Python ETL pipelines, and early Kubernetes and Docker modernization work.],
-  [Led and coached QA engineers in modernizing their practices, while conducting performance reviews, mentoring engineers, and helping establish sustainable delivery practices.],
-))
+- Delivered complex client software engagements across mobile, web, data, and platform systems, growing from software engineer to senior engineer and later adding engineering management responsibilities within an Agile-XP consultancy centered on TDD, pair programming, one-week sprints, and continuous delivery.
+- Led a 5-engineer squad for Jetblack / Walmart Labs building a greenfield last-mile logistics coordination product, driving planning, hands-on engineering, and cross-team coordination.
+- Contributed across Facebook and JOOR engagements spanning product discovery, React frontend development, Python ETL pipelines, and early Kubernetes and Docker modernization work.
+- Led and coached QA engineers in modernizing their practices, while conducting performance reviews, mentoring engineers, and helping establish sustainable delivery practices.
 
 #role[General Assembly / NY Code & Design Academy — Software Instructor][Santa Monica, CA - 2013 | New York, NY - 2016]
-#bullets((
-  [Taught full-stack web development and software engineering fundamentals, mentoring students in programming practices and system-level thinking.],
-))
+- Taught full-stack web development and software engineering fundamentals, mentoring students in programming practices and system-level thinking.
 
 #section[Education]
 #text(weight: "bold")[General Assembly] — Web Development Immersive, 2013
