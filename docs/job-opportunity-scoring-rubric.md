@@ -16,7 +16,7 @@ Use a 1–5 scale for each dimension:
 
 ## Core dimensions
 
-### 1. Climate mission alignment (20%)
+### 1. Climate mission alignment (25%)
 How strongly does the company/role align with the climate work Josh actually cares about?
 
 High score:
@@ -57,7 +57,7 @@ High score:
 - room to shape direction, not just execute tickets
 - product thinking and tradeoff judgment matter
 
-### 6. Team / stage fit (10%)
+### 6. Team / stage fit (5%)
 How well does the company stage and team context fit Josh’s working style?
 
 High score:
@@ -93,6 +93,15 @@ The explanation sentence matters because it preserves judgment and nuance.
 
 ### Example explanation
 > Strong climate alignment and excellent systems fit, but only moderate role-shape fit because it leans too far toward pure operations.
+
+## Architecture suggestion
+A clean implementation path for this scoring system would likely include:
+- a rubric definition file that stores the scoring dimensions, descriptions, and weights in one place
+- a scoring module that applies the weighted calculation consistently
+- a structured opportunity record shape that stores raw dimension scores, weighted total, summary judgment, and notes
+- an output adapter layer that can write results to markdown, Notion, or the application database without changing the scoring logic itself
+
+That separation should make it easier to evolve weights and dimensions later without rewriting the whole workflow.
 
 ## Working assumption behind this rubric
 This rubric reflects the current understanding that Josh’s strongest fit is likely in climate roles that combine some mix of:
