@@ -16,6 +16,9 @@ Selected for Climatebase’s competitive fellowship focused on climate-positive 
 **Brine & Ember — Founding Developer / Fellowship Capstone (2025)**  
 Explored a circular food venture centered on seaweed-based carbon sequestration and biochar production; produced technical and business analysis including process diagrams and techno-economic assessment.
 
+**BELT — Climate Venture Product and Methodology Exploration (2025)**  
+Helped shape an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, and collaborator-facing concept development.
+
 ## Technical Skills
 **Languages & Frameworks:** Python, TypeScript, Node.js, React, React Native, Swift, Kotlin  
 **Systems & Platform:** REST APIs, GraphQL, OAuth/JWT, CI/CD, Docker, Terraform, Kubernetes  
@@ -45,13 +48,9 @@ Explored a circular food venture centered on seaweed-based carbon sequestration 
 - Contributed across Facebook and JOOR engagements spanning product discovery, React frontend development, Python ETL pipelines, and early Kubernetes and Docker modernization work.
 - Led and coached QA engineers in modernizing their practices, while conducting performance reviews, mentoring engineers, and helping establish sustainable delivery practices.
 
-### General Assembly — Software Instructor
-**New York, NY | 2013–2014**
-- Taught full-stack web development and mentored students in software engineering practices and system-level thinking.
-
-### NY Code & Design Academy — Software Instructor
-**New York, NY | 2016**
-- Taught software development in a separate instructional role.
+### General Assembly / NY Code & Design Academy — Software Instructor
+**New York, NY | 2013–2016**
+- Taught full-stack web development and software engineering fundamentals, mentoring students in programming practices and system-level thinking.
 
 ## Education
 **General Assembly** — Web Development Immersive, 2013  
