@@ -6,11 +6,11 @@ Pasadena, CA
 
 ## Professional Summary
 
-Senior product manager and technical product leader with 12+ years of experience turning ambiguous ideas into shipped software across mobile, web, and operational systems. Strong track record leading cross-functional teams across product, engineering, design, QA, operations, and stakeholders to shape roadmap, clarify requirements, prioritize work, and move complex products from discovery to delivery. Particularly strong in technically dense domains where product judgment, systems thinking, and hands-on prototyping all matter.
+Senior product manager and technical product leader with 12+ years of experience turning ambiguous ideas into shipped software across mobile, web, and operational systems. Strong track record leading cross-functional teams across product, engineering, design, QA, operations, and stakeholders to shape roadmap, clarify requirements, prioritize work, and move complex products from discovery to delivery. Particularly strong in technically dense domains where product judgment, systems thinking, and rapid prototyping all matter.
 
 ## Core Strengths
 
-Product strategy and discovery · Technical product management · Roadmap shaping · Requirements and PRD creation · Cross-functional leadership · Data-informed prioritization · Workflow and operations design · AI-native prototyping fluency · Engineering collaboration · Climate and enterprise software contexts
+Product strategy and discovery · Technical product management · Roadmap shaping · Requirements and PRD creation · Cross-functional leadership · Data-informed prioritization · Workflow and operations design · AI-enabled prototyping · Engineering collaboration · Climate and enterprise software contexts
 
 ## Climate & Mission Alignment
 
@@ -47,7 +47,7 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 - Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.
 - Led product discovery, customer research, and design sessions, serving as a bridge across engineering, design, operations, communications, and business stakeholders.
 - Managed early hiring across engineering and design while performing hands-on engineering and leading delivery for a small cross-functional team.
-- Designed and iterated on product flows, real-time communication features, and implementation plans in a startup environment where ambiguity tolerance and rapid learning were critical.
+- Designed and iterated on product flows, real-time communication features, and implementation plans in a startup environment where ambiguity tolerance, prototyping, and close engineering collaboration were critical.
 - Improved app startup time by 400% for users active in multiple conversations by redesigning Twilio-driven chat state handling to avoid unnecessary processing at launch.
 
 ### Def Method — Senior Software Engineer / Engineering Manager

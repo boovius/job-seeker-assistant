@@ -6,11 +6,11 @@ Pasadena, CA
 
 ## Professional Summary
 
-Senior fullstack engineer and technical product leader with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record working across product, engineering, design, QA, operations, and stakeholders to turn messy real-world problems into usable systems. Especially effective in small teams where hands-on implementation, system design, product judgment, and cross-functional collaboration all matter.
+Senior fullstack engineer with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record working across product, engineering, design, QA, operations, and stakeholders to turn messy real-world problems into usable systems. Especially effective in small teams where hands-on implementation, system design, and cross-functional collaboration all matter.
 
 ## Core Strengths
 
-Fullstack product engineering · AWS and server-side systems · React and Next.js applications · API and data integration design · Cross-functional collaboration · Technical roadmap shaping · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
+Fullstack product engineering · AWS and server-side systems · React and Next.js applications · API and third-party integration design · Data workflows and ETL systems · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
 
 ## Climate & Mission Alignment
 
@@ -28,7 +28,7 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 **Languages & Frameworks:** Python, TypeScript, JavaScript, Node.js, React, Next.js, React Native, Swift, Kotlin  
 **Systems & Platform:** REST APIs, GraphQL, AWS-oriented backend patterns, CI/CD, Docker, Kubernetes, Terraform  
 **Data & State:** PostgreSQL, ETL pipelines, analytics workflows, Redux, Zustand  
-**Delivery & Leadership:** cross-functional collaboration, planning, roadmap shaping, hiring, mentorship, code review, prioritization
+**Delivery:** cross-functional collaboration, planning, mentorship, code review, prioritization
 
 ## Experience
 
@@ -46,7 +46,7 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 **Remote | 2021–2024**
 
 - Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.
-- Led product discovery, user research, and design sessions, while also contributing hands-on to technical architecture, implementation planning, and delivery.
+- Contributed hands-on across technical architecture, implementation planning, and delivery while partnering closely with product and design.
 - Designed and implemented API-driven systems, real-time communication services, and event-driven workflows across a small startup team.
 - Re-architected core data access patterns and system flows across a real-time, event-driven product.
 - Improved app startup time by 400% for users active in multiple conversations by redesigning Twilio-driven chat state handling to avoid unnecessary processing at launch.

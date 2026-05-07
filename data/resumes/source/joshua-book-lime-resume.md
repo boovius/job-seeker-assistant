@@ -6,11 +6,11 @@ Pasadena, CA
 
 ## Professional Summary
 
-Staff-level fullstack engineer and technical leader with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record delivering internal and customer-facing product systems across backend services, React applications, mobile clients, and operational workflows. Especially effective translating messy business processes into maintainable software, aligning cross-functional teams, and contributing inside shared codebases while still shipping hands-on.
+Senior fullstack engineer and technical leader with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record delivering internal and customer-facing product systems across backend services, React applications, mobile clients, and operational workflows. Especially effective translating messy business processes into maintainable software, aligning cross-functional teams, and contributing inside shared codebases while still shipping hands-on.
 
 ## Core Strengths
 
-Fullstack product engineering · Backend services and API design · React and TypeScript · Ruby on Rails and JavaScript ecosystems · Business workflow and admin tooling · Cross-functional delivery · Technical roadmap shaping · System design under ambiguity · Team leadership and mentorship
+Fullstack product engineering · Backend services and API design · React and TypeScript · Ruby on Rails and JavaScript ecosystems · Business workflow and admin tooling · Shared codebase collaboration · Cross-functional delivery · Technical roadmap shaping · Team leadership and mentorship
 
 ## Climate & Mission Alignment
 
@@ -38,16 +38,16 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 - Provide hands-on product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through implementation and iteration.
 - Lead product management for the New York City Campaign Finance Board’s Contribute app across engineers and client stakeholders, translating policy constraints, business goals, and technical realities into scoped work and shipped improvements.
 - Drive roadmap development, prioritization, data analysis, product requirements, and implementation planning to move work from concept to delivery.
-- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization, internal tooling improvements, and senior iOS delivery across client engagements.
+- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization, internal tooling improvements, and senior iOS delivery across multiple client engagements.
 
 ### Frequency Machine — Head of Product Management / Engineering Lead (Cerca)
 
 **Remote | 2021–2024**
 
 - Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.
-- Led product discovery, user research, and design sessions, while also contributing hands-on to technical architecture, implementation planning, and delivery.
+- Led product discovery, user research, and design sessions, while also contributing hands-on to implementation planning, delivery, and technical decision-making.
 - Designed and implemented API-driven systems, real-time communication workflows, and core product flows across a small cross-functional startup team.
-- Managed early hiring across engineering and design and helped establish engineering culture and working practices in a fast-moving startup environment.
+- Managed early hiring across engineering and design, contributed to shared architecture and codebase decisions, and helped establish engineering working practices in a fast-moving startup environment.
 - Improved app startup time by 400% for users active in multiple conversations by redesigning Twilio-driven chat state handling to avoid unnecessary processing at launch.
 
 ### Def Method — Senior Software Engineer / Engineering Manager

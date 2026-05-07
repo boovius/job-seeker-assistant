@@ -29,14 +29,14 @@
 ]
 
 #align(center)[Pasadena, CA]
-#align(center)[#link("mailto:joshua.book@gmail.com")[joshua.book\/@gmail.com] · 631-355-6566]
+#align(center)[#link("mailto:joshua.book@gmail.com")[joshua.book\@gmail.com] · 631-355-6566]
 #align(center)[#link("https://linkedin.com/in/joshuacbook")[linkedin.com/in/joshuacbook] · #link("https://github.com/boovius")[github.com/boovius]]
 
 #section[Professional Summary]
-Senior fullstack engineer and technical product leader with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record working across product, engineering, design, QA, operations, and stakeholders to turn messy real-world problems into usable systems. Especially effective in small teams where hands-on implementation, system design, product judgment, and cross-functional collaboration all matter.
+Senior fullstack engineer with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record working across product, engineering, design, QA, operations, and stakeholders to turn messy real-world problems into usable systems. Especially effective in small teams where hands-on implementation, system design, and cross-functional collaboration all matter.
 
 #section[Core Strengths]
-Fullstack product engineering · AWS and server-side systems · React and Next.js applications · API and data integration design · Cross-functional collaboration · Technical roadmap shaping · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
+Fullstack product engineering · AWS and server-side systems · React and Next.js applications · API and third-party integration design · Data workflows and ETL systems · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
 
 #section[Climate & Mission Alignment]
 #text(weight: "bold")[Climatebase Fellowship — Innovator Distinction (2025)]
@@ -57,7 +57,7 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 #linebreak()
 #text(weight: "bold")[Data & State:] PostgreSQL, ETL pipelines, analytics workflows, Redux, Zustand
 #linebreak()
-#text(weight: "bold")[Delivery & Leadership:] cross-functional collaboration, planning, roadmap shaping, hiring, mentorship, code review, prioritization
+#text(weight: "bold")[Delivery:] cross-functional collaboration, planning, mentorship, code review, prioritization
 
 #section[Experience]
 #role[Book Bites Inc. — Founder / Product & Technical Consultant][Remote | 2021–Present]
@@ -68,7 +68,7 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 
 #role[Frequency Machine — Head of Product Management / Engineering Lead (Cerca)][Remote | 2021–2024]
 - Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.
-- Led product discovery, user research, and design sessions, while also contributing hands-on to technical architecture, implementation planning, and delivery.
+- Contributed hands-on across technical architecture, implementation planning, and delivery while partnering closely with product and design.
 - Designed and implemented API-driven systems, real-time communication services, and event-driven workflows across a small startup team.
 - Re-architected core data access patterns and system flows across a real-time, event-driven product.
 - Improved app startup time by 400% for users active in multiple conversations by redesigning Twilio-driven chat state handling to avoid unnecessary processing at launch.
