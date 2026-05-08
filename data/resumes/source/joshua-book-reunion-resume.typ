@@ -47,8 +47,12 @@ Selected for Climatebase’s competitive fellowship focused on climate-positive 
 Contributed to work advancing visibility and understanding in the carbon removal ecosystem.
 
 #v(0.25em)
-#text(weight: "bold")[BELT — Climate Venture Product and Methodology Exploration (2025)]
-Helped shape an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, and collaborator-facing concept development.
+#text(weight: "bold")[BELT — Founder / Developer, climate venture software concept (2025)]
+Created, developed, and led an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, team recruitment, and collaborator-facing concept development.
+
+#v(0.22em)
+#text(weight: "bold")[Brine & Ember — Founding Developer / Fellowship Capstone (2025)]
+Explored a circular food venture centered on seaweed-based carbon sequestration and biochar production, producing technical and business analysis including process diagrams and techno-economic assessment.
 
 #section[Technical Skills]
 #text(weight: "bold")[Languages & Frameworks:] Python, TypeScript, JavaScript, Node.js, React, Next.js, React Native, Swift, Kotlin
