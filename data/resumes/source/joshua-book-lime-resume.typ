@@ -47,8 +47,12 @@ Selected for Climatebase’s competitive fellowship focused on climate-positive 
 Contributed to work advancing visibility and understanding in the carbon removal ecosystem.
 
 #v(0.22em)
-#text(weight: "bold")[BELT — Climate Venture Product and Methodology Exploration (2025)]
-Helped shape an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, and collaborator-facing concept development.
+#text(weight: "bold")[BELT — Founder / Developer, climate venture software concept (2025)]
+Created, developed, and led an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, team recruitment, and collaborator-facing concept development.
+
+#v(0.22em)
+#text(weight: "bold")[Brine & Ember — Founding Developer / Fellowship Capstone (2025)]
+Explored a circular food venture centered on seaweed-based carbon sequestration and biochar production, producing technical and business analysis including process diagrams and techno-economic assessment.
 
 #section[Technical Skills]
 #text(weight: "bold")[Languages & Frameworks:] TypeScript, JavaScript, Ruby, Ruby on Rails, Python, Node.js, React, React Native, Swift, Kotlin, AngularJS
@@ -85,6 +89,9 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 #role[Big Frame — Junior Engineer][Los Angeles, CA | 2013–2014]
 - Contributed to web application development using AngularJS and Ruby on Rails in an early-career engineering role.
 - Supported feature delivery, debugging, and collaboration within a production software team.
+
+#role[General Assembly / NY Code & Design Academy — Software Instructor][Santa Monica, CA - 2013 | New York, NY - 2016]
+- Taught full-stack web development and software engineering fundamentals, mentoring students in programming practices, debugging, and system-level thinking.
 
 #section[Education]
 #text(weight: "bold")[General Assembly] — Web Development Immersive, 2013

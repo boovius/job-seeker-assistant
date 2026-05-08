@@ -20,8 +20,11 @@ Selected for Climatebase’s competitive fellowship focused on climate-positive 
 **CDR.fyi — Contributor (2025)**  
 Contributed to work advancing visibility and understanding in the carbon removal ecosystem.
 
-**BELT — Climate Venture Product and Methodology Exploration (2025)**  
-Helped shape an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, and collaborator-facing concept development.
+**BELT — Founder / Developer, climate venture software concept (2025)**  
+Created, developed, and led an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including product framing, methodology landscape analysis, team recruitment, and collaborator-facing concept development.
+
+**Brine & Ember — Founding Developer / Fellowship Capstone (2025)**  
+Explored a circular food venture centered on seaweed-based carbon sequestration and biochar production, producing technical and business analysis including process diagrams and techno-economic assessment.
 
 ## Technical Skills
 
@@ -73,6 +76,12 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 
 - Contributed to web application development using AngularJS and Ruby on Rails in an early-career engineering role.
 - Supported feature delivery, debugging, and collaboration within a production software team.
+
+### General Assembly / NY Code & Design Academy — Software Instructor
+
+**Santa Monica, CA - 2013 | New York, NY - 2016**
+
+- Taught full-stack web development and software engineering fundamentals, mentoring students in programming practices, debugging, and system-level thinking.
 
 ## Education
 
