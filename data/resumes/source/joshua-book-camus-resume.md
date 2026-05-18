@@ -1,16 +1,16 @@
 # Joshua Book
 
-Pasadena, CA
-[joshua.book@gmail.com](mailto:joshua.book@gmail.com) · 631-355-6566
+Pasadena, CA  
+[joshua.book@gmail.com](mailto:joshua.book@gmail.com) · 631-355-6566  
 [linkedin.com/in/joshuacbook](https://linkedin.com/in/joshuacbook) · [github.com/boovius](https://github.com/boovius)
 
 ## Professional Summary
 
-Senior backend software engineer and technical leader with 12+ years of experience building data-rich software systems in complex environments. Experience includes backend workflows, ETL pipelines, data modeling, API design, and cross-functional delivery across engineering, product, design, QA, and operations. Strong focus on data integrity, validation, system reliability, and maintainable software design.
+Senior software engineer and technical leader with 12+ years of experience building backend workflows, APIs, internal tooling, and data-rich product systems in complex operating environments. Strong track record contributing across application logic, platform-adjacent infrastructure, delivery processes, and operationally sensitive workflows. Especially effective translating messy real-world constraints into maintainable software, improving system resiliency, and partnering closely across engineering, product, design, QA, and stakeholders.
 
 ## Core Strengths
 
-Backend systems · Data pipelines and ETL workflows · Python and SQL · Data modeling · API design · Data validation and correctness · System reliability · Cross-functional collaboration · Platform and tooling development
+Backend systems and API design · Python data workflows and ETL · Platform collaboration and delivery infrastructure · CI/CD and delivery practices · Operational resiliency and workflow improvement · Data validation and system correctness · Cross-functional incident-style coordination · Technical leadership and mentorship
 
 ## Climate & Mission Alignment
 
@@ -21,13 +21,13 @@ Selected for Climatebase’s competitive fellowship focused on climate-positive 
 Contributed to work advancing visibility and understanding in the carbon removal ecosystem.
 
 **BELT — Founder / Developer, climate software concept (2025)**  
-Founded and developed an early-stage climate software concept intended to bridge the gap between early project conception and more rigorous LCA for circular carbon removal projects, including methodology analysis, scenario modeling, product framing, collaborator alignment, and early concept development.
+Founded and developed an early-stage climate software concept focused on evaluating biochar and circular carbon removal venture viability, including methodology analysis, scenario modeling, product framing, and early collaborator alignment.
 
 ## Technical Skills
 
-**Languages & Frameworks:** Python, SQL, Ruby, Ruby on Rails, TypeScript, JavaScript, Node.js, React, React Native, AngularJS, Swift, Kotlin  
-**Data & Platform:** PostgreSQL, ETL pipelines, data modeling, API design, data validation, authentication and security, Elasticsearch, Docker, Kubernetes, Terraform  
-**Delivery & Quality:** TDD, CI/CD, code review, maintainability, testing, mentorship
+**Languages & Frameworks:** Python, SQL, TypeScript, JavaScript, Ruby, Ruby on Rails, Node.js, React, React Native, AngularJS, Swift, Kotlin  
+**Platform & Data:** REST APIs, GraphQL, PostgreSQL, ETL pipelines, Docker, Kubernetes, Terraform, authentication and security  
+**Delivery & Reliability:** CI/CD, TDD, code review, pair programming, maintainability, testing, cross-functional delivery, mentorship
 
 ## Experience
 
@@ -37,8 +37,8 @@ Founded and developed an early-stage climate software concept intended to bridge
 
 - Provide hands-on technical and engineering leadership for startups and mission-oriented technology teams from discovery through implementation and iteration.
 - Lead planning and systems coordination for the New York City Campaign Finance Board’s Contribute app across engineers and client stakeholders, translating policy constraints, business goals, and technical realities into shipped improvements.
-- Drive data-informed prioritization, implementation planning, and requirements clarification to move complex work from ambiguity to delivery.
-- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while supporting internal tooling improvements and legacy mobile modernization.
+- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while supporting internal tooling improvements and modernization work.
+- Drive data-informed prioritization, implementation planning, and requirements clarification to move complex work from ambiguity to reliable delivery.
 
 ### Frequency Machine — Head of Product Management / Engineering Lead (Cerca)
 

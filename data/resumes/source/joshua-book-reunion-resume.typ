@@ -36,7 +36,7 @@
 Senior fullstack engineer with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record working across product, engineering, design, QA, operations, and stakeholders to turn messy real-world problems into usable systems. Especially effective in small teams where hands-on implementation, system design, and cross-functional collaboration all matter.
 
 #section[Core Strengths]
-Fullstack product engineering · AWS and server-side systems · React and Next.js applications · API and third-party integration design · Data workflows and ETL systems · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
+Fullstack product engineering · Cloud-backed server-side systems · React applications · API and third-party integration design · Data workflows and ETL systems · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
 
 #section[Climate & Mission Alignment]
 #text(weight: "bold")[Climatebase Fellowship — Innovator Distinction (2025)]
@@ -57,7 +57,7 @@ Explored a circular food venture centered on seaweed-based carbon sequestration 
 #section[Technical Skills]
 #text(weight: "bold")[Languages & Frameworks:] Python, TypeScript, JavaScript, Node.js, React, Next.js, React Native, Swift, Kotlin
 #linebreak()
-#text(weight: "bold")[Systems & Platform:] REST APIs, GraphQL, AWS-oriented backend patterns, CI/CD, Docker, Kubernetes, Terraform
+#text(weight: "bold")[Systems & Platform:] REST APIs, GraphQL, cloud backend patterns, CI/CD, Docker, Kubernetes, Terraform
 #linebreak()
 #text(weight: "bold")[Data & State:] PostgreSQL, ETL pipelines, analytics workflows, Redux, Zustand
 #linebreak()

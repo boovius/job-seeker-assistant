@@ -65,7 +65,7 @@ Explored a circular food venture centered on seaweed-based carbon sequestration 
 #role[Book Bites Inc. — Founder / Product & Technical Consultant][Remote | 2021–Present]
 - Provide product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through implementation and iteration.
 - Lead product management for the New York City Campaign Finance Board’s Contribute app across engineers and client stakeholders, translating policy constraints, business goals, and technical realities into roadmap decisions, scoped work, and shipped improvements.
-- Drive roadmap development, prioritization, customer research, data analysis, business initiative ownership, and product requirements documentation to move work from concept to delivery.
+- Drive roadmap development, prioritization, customer research, data analysis, and product requirements documentation to move work from concept to delivery.
 - Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting internal tooling improvements and modernization efforts tied to service operations.
 
 #role[Frequency Machine — Head of Product Management / Engineering Lead (Cerca)][Remote | 2021–2024]

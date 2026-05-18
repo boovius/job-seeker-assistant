@@ -6,7 +6,7 @@ Pasadena, CA
 
 ## Professional Summary
 
-Senior fullstack engineer and technical leader with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record delivering internal and customer-facing product systems across backend services, React applications, mobile clients, and operational workflows. Especially effective translating messy business processes into maintainable software, aligning cross-functional teams, and contributing inside shared codebases while still shipping hands-on.
+Senior fullstack engineer and technical leader with 12+ years of experience building and shipping web and mobile software in ambiguous, fast-moving environments. Strong track record delivering internal and customer-facing product systems across backend services, React applications, mobile clients, and operational workflows. Especially effective translating messy business processes into maintainable software, aligning cross-functional teams, and shipping hands-on inside shared codebases.
 
 ## Core Strengths
 
@@ -40,7 +40,7 @@ Explored a circular food venture centered on seaweed-based carbon sequestration 
 
 - Provide hands-on product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through implementation and iteration.
 - Lead product management for the New York City Campaign Finance Board’s Contribute app across engineers and client stakeholders, translating policy constraints, business goals, and technical realities into scoped work and shipped improvements.
-- Drive roadmap development, prioritization, data analysis, product requirements, and implementation planning to move work from concept to delivery.
+- Drive roadmap development, prioritization, data analysis, product requirements, and implementation planning to move work from concept to reliable delivery.
 - Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization, internal tooling improvements, and senior iOS delivery across multiple client engagements.
 
 ### Frequency Machine — Head of Product Management / Engineering Lead (Cerca)

@@ -10,7 +10,7 @@ Senior fullstack engineer with 12+ years of experience building and shipping web
 
 ## Core Strengths
 
-Fullstack product engineering · AWS and server-side systems · React and Next.js applications · API and third-party integration design · Data workflows and ETL systems · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
+Fullstack product engineering · Cloud-backed server-side systems · React applications · API and third-party integration design · Data workflows and ETL systems · CI/CD and delivery practices · Systems thinking under ambiguity · Startup execution
 
 ## Climate & Mission Alignment
 
@@ -29,7 +29,7 @@ Explored a circular food venture centered on seaweed-based carbon sequestration 
 ## Technical Skills
 
 **Languages & Frameworks:** Python, TypeScript, JavaScript, Node.js, React, Next.js, React Native, Swift, Kotlin  
-**Systems & Platform:** REST APIs, GraphQL, AWS-oriented backend patterns, CI/CD, Docker, Kubernetes, Terraform  
+**Systems & Platform:** REST APIs, GraphQL, cloud backend patterns, CI/CD, Docker, Kubernetes, Terraform  
 **Data & State:** PostgreSQL, ETL pipelines, analytics workflows, Redux, Zustand  
 **Delivery:** cross-functional collaboration, planning, mentorship, code review, prioritization
 

@@ -33,10 +33,10 @@
 #align(center)[#link("https://linkedin.com/in/joshuacbook")[linkedin.com/in/joshuacbook] · #link("https://github.com/boovius")[github.com/boovius]]
 
 #section[Professional Summary]
-Senior product manager and technical product leader with 12+ years of experience turning ambiguous ideas into shipped software across mobile, web, and operational systems. Strong track record leading cross-functional teams across product, engineering, design, QA, operations, and stakeholders to shape roadmap, clarify requirements, prioritize work, and move complex products from discovery to delivery. Particularly strong in technically dense domains where product judgment, systems thinking, and rapid prototyping all matter.
+Senior product manager and technical product leader with 12+ years of experience turning ambiguous ideas into shipped software across mobile, web, and operational systems. Strong track record leading cross-functional teams across product, engineering, design, QA, operations, and stakeholders to shape roadmap, clarify requirements, prioritize work, and move complex products from discovery to delivery. Particularly strong in technically dense domains where product judgment, systems thinking, and cross-functional execution all matter.
 
 #section[Core Strengths]
-Product strategy and discovery · Technical product management · Roadmap shaping · Requirements and PRD creation · Cross-functional leadership · Data-informed prioritization · Workflow and operations design · AI-enabled prototyping · Engineering collaboration · Climate and enterprise software contexts
+Product strategy and discovery · Technical product management · Roadmap shaping · Requirements and PRD creation · Cross-functional leadership · Data-informed prioritization · Workflow and operations design · Engineering collaboration · Climate and enterprise software contexts · Data and workflow-heavy products
 
 #section[Climate & Mission Alignment]
 #text(weight: "bold")[Climatebase Fellowship — Innovator Distinction (2025)]
@@ -65,7 +65,7 @@ Explored a circular food venture centered on seaweed-based carbon sequestration 
 #role[Book Bites Inc. — Founder / Product & Technical Consultant][Remote | 2021–Present]
 - Provide product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through implementation and iteration.
 - Lead product management for the New York City Campaign Finance Board’s Contribute app across engineers and client stakeholders, translating policy constraints, business goals, and technical realities into roadmap decisions, scoped work, and shipped improvements.
-- Drive roadmap development, prioritization, customer research, data analysis, business initiative ownership, and product requirements documentation to move work from concept to delivery.
+- Drive roadmap development, prioritization, customer research, data analysis, and product requirements documentation to move work from concept to delivery.
 - Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting internal tooling improvements and modernization efforts.
 
 #role[Frequency Machine — Head of Product Management / Engineering Lead (Cerca)][Remote | 2021–2024]
