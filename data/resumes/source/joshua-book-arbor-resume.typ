@@ -42,6 +42,7 @@ Business systems architecture & information design · Cross-functional program l
 #section[Experience]
 #role[Book Bites Inc. — Founder / Technical Consultant][Remote | 2021–Present]
 Consulting engagements for *Clipper Digital*, *Everplans*, and the *New York City Campaign Finance Board*.
+#v(0.3em)
 - Lead business systems and process transformation for the NYC Campaign Finance Board's Contribute application, coordinating across engineers and agency stakeholders to translate policy constraints and business goals into technical roadmaps.
 - Designed governance frameworks, OKRs, and metrics infrastructure from scratch — aligning initiatives to strategic north stars and creating structured accountability where none existed.
 - Led an operational overhaul during a major campaign-driven data surge, redesigning workflows and data processing pipelines to handle significantly higher volumes with greater resiliency.
@@ -55,6 +56,7 @@ Consulting engagements for *Clipper Digital*, *Everplans*, and the *New York Cit
 
 #role[Def Method — Senior Software Engineer / Engineering Manager][New York, NY | 2016–2021]
 Client engagements: *JOOR · Jetblack (Walmart Labs) · Facebook · FloodHelpNYC · Pager · Casper*
+#v(0.3em)
 - Delivered complex systems work across data, platform, and integration engagements in an Agile-XP consultancy centered on TDD, continuous delivery, and pair programming.
 - Contributed to a Python ETL pipeline at JOOR for ingesting, validating, and structuring large volumes of client data; supported Kubernetes and Docker modernization.
 - Led a 5-engineer squad at Jetblack / Walmart Labs building a greenfield logistics coordination system, driving planning, implementation, and cross-team alignment with DevOps and ML teams.
