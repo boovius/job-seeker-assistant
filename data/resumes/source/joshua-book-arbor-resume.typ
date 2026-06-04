@@ -80,7 +80,7 @@ Collaborated with climate founders and technologists on decarbonization strategy
 Explored a circular food venture centered on seaweed-based bioenergy and biochar production, integrating carbon sequestration with food-system circularity. Produced technical and business analysis including process diagrams and techno-economic assessment.
 
 #v(0.2em)
-#text(weight: "bold")[BELT — Founder / Developer (2025)]
+#text(weight: "bold")[BELT — Founder / Developer (2025)] · #link("https://belt.bookbitesinc.com")[belt.bookbitesinc.com]
 #linebreak()
 Built early-stage climate software for evaluating biochar and circular carbon removal venture viability, including methodology analysis, scenario modeling, and data-driven assessment tooling.
 

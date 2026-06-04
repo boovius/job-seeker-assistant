@@ -66,7 +66,7 @@ Collaborated with climate founders and technologists on decarbonization strategy
 **Brine & Ember — Founding Developer / Fellowship Capstone (2025)** · [brineandember.earth](https://brineandember.earth)
 Explored a circular food venture centered on seaweed-based bioenergy and biochar production, integrating carbon sequestration with food-system circularity. Produced technical and business analysis including process diagrams and techno-economic assessment.
 
-**BELT — Founder / Developer (2025)**
+**BELT — Founder / Developer (2025)** · [belt.bookbitesinc.com](https://belt.bookbitesinc.com)
 Built early-stage climate software for evaluating biochar and circular carbon removal venture viability, including methodology analysis, scenario modeling, and data-driven assessment tooling.
 
 ## Technical Skills
