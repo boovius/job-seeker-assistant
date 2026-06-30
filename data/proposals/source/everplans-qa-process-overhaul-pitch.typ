@@ -15,6 +15,19 @@
   #v(0.18em)
 ]
 
+#align(center)[
+  #text(weight: "bold", size: 18pt)[Everplans QA Process Overhaul]
+]
+#v(0.12em)
+#align(center)[
+  #text(size: 10.5pt, fill: rgb("#555555"))[June 30, 2026]
+]
+#v(0.06em)
+#align(center)[
+  #text(size: 10.5pt, fill: rgb("#555555"))[Authored by Joshua Book]
+]
+#v(0.45em)
+
 #section[Executive Summary]
 Everplans currently relies on 1 to 2 part-time QA contractors to absorb most of the final validation work across the product. As engineering output accelerates through AI assistance, the bottleneck has shifted downstream into QA, product clarification, environment setup, and release readiness. The core problem is not simply a lack of regression coverage. It is that the current operating model asks a very small amount of manual human validation to keep pace with a much larger volume of changing work.
 
