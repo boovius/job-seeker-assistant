@@ -26,6 +26,10 @@
 #align(center)[
   #text(size: 10.5pt, fill: rgb("#555555"))[Authored by Joshua Book]
 ]
+#v(0.02em)
+#align(center)[
+  #text(size: 10.5pt, fill: rgb("#555555"))[Def Method]
+]
 #v(0.45em)
 
 #section[Executive Summary]
