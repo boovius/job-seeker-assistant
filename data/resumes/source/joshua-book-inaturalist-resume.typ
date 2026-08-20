@@ -29,14 +29,14 @@
 ]
 
 #align(center)[Pasadena, CA]
-#align(center)[#link("mailto:joshua.book@gmail.com")[joshua.book\/@gmail.com] · 631-355-6566]
+#align(center)[#link("mailto:joshua.book@gmail.com")[joshua.book\@gmail.com] · 631-355-6566]
 #align(center)[#link("https://linkedin.com/in/joshuacbook")[linkedin.com/in/joshuacbook] · #link("https://github.com/boovius")[github.com/boovius]]
 
 #section[Professional Summary]
-Technical product and engineering leader with 12+ years of experience turning ambiguous ideas into shipped mobile and web software. Strong track record leading cross-functional teams across product, engineering, design, QA, and operations to shape roadmap, clarify requirements, coordinate execution, and improve quality through launch and iteration. Combines deep technical fluency with product judgment, systems thinking, and a mission-driven orientation toward technology with real-world public impact.
+Technical product and engineering leader with 12+ years of experience turning ambiguous ideas into shipped mobile and web software. Strong track record leading cross-functional teams across product, engineering, design, QA, and operations to shape roadmap, clarify requirements, coordinate execution, and improve quality through launch and iteration. Combines deep technical fluency with product judgment, systems thinking, and a mission-driven orientation toward software with real-world public impact.
 
 #section[Core Strengths]
-Cross-functional delivery leadership · Product discovery · Roadmap shaping · Backlog prioritization · Requirements and acceptance criteria · Agile planning and execution tracking · QA collaboration · Stakeholder alignment · Mobile and web delivery · Engineering leadership
+Cross-functional delivery leadership · Product discovery · Roadmap shaping · Backlog prioritization · Requirements and acceptance criteria · QA collaboration · Stakeholder alignment · Mobile and web delivery · Data quality mindset · Engineering leadership
 
 #section[Climate & Mission Alignment]
 #text(weight: "bold")[Climatebase Fellowship — Innovator Distinction (2025)]
@@ -64,7 +64,7 @@ Helped shape an early-stage climate software concept focused on evaluating bioch
 - Provide product, delivery, and engineering leadership for startups and mission-oriented technology teams from discovery through execution and iteration.
 - Lead product management for the New York City Campaign Finance Board’s Contribute app across a team of 3 engineers and client stakeholders, translating goals and constraints into roadmap decisions, scoped work, and shipped improvements.
 - Drive roadmap development, prioritization, customer research, data analysis, and product requirements documentation to move work from concept to delivery.
-- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization and senior iOS delivery across client engagements.
+- Helped lead an operational overhaul during a major campaign-driven contribution surge, improving resiliency and response speed for high-volume workflows while also supporting legacy mobile modernization across client engagements.
 
 #role[Frequency Machine — Head of Product Management / Engineering Lead (Cerca)][Remote | 2021–2024]
 - Joined as the first technical hire and helped define, build, launch, and scale Cerca, a mobile media and social connection product.
