@@ -1,6 +1,8 @@
 # Experience Database
 
-_Last updated: 2026-04-06_
+Use this file for: structured resume evidence, canonical role entries, source-traceable facts, and explicit gaps that still need stronger metrics or examples.
+
+_Last updated: 2026-06-03_
 
 ## Canonical Entries
 
@@ -16,9 +18,9 @@ _Last updated: 2026-04-06_
   - Advisory work for early-stage teams on technical architecture, delivery planning, and data-driven product strategy
 - **Client / project subentries:**
   - **Clipper Digital:** Modernization of legacy Android and iOS applications
-  - **Campaign Finance Board (CFB) — Contribute app:** Product management across a team of 3 engineers and a set of product-owning clients; managed and drew out roadmap, customer research, data analysis, business initiative driving, prioritization, PRD creation, and pushed the product forward while maintaining and improving core stability. Led an overhaul of emergency operations when the product was flooded with contributions from the Mamdani campaign in New York City, updating internal operations to handle much higher data volumes with greater resiliency and faster response times. Helped complete a long-stalled modernization epic and is now supporting development of new user-facing sharing/growth features and improved internal tooling.
+  - **Campaign Finance Board (CFB) — Contribute app:** Product management across a team of 3 engineers and a set of product-owning clients; drew out roadmap, customer research, data analysis, business initiative framing, prioritization, PRD creation, and product delivery while maintaining and improving core stability. Brought clarity to an underdefined government product roadmap by conducting internal team research, aligning high-level initiatives to agency north stars, creating OKRs, and putting metric-gathering mechanisms in place for product stability, workflow efficiency, estimation accuracy, and user success. Helped establish a stronger team operating rhythm so projects stayed focused from definition through delivery. Led an overhaul of emergency operations when the product was flooded with contributions from the Mamdani campaign in New York City, updating internal operations to handle much higher data volumes with greater resiliency and faster response times. Helped complete a long-stalled modernization epic and is now supporting development of new user-facing sharing/growth features and improved internal tooling.
   - **Everplans:** Senior mobile iOS work focused on security concerns, maintenance, feature development, and delivery
-- **Keywords / tags:** architecture, mobile, iOS, Android, modernization, product management, roadmap, customer research, data analysis, prioritization, PRDs, delivery planning, technical consulting, startup, product strategy, cross-functional
+- **Keywords / tags:** architecture, mobile, iOS, Android, modernization, product management, roadmap, customer research, data analysis, prioritization, PRDs, OKRs, metrics, product operations, workflow efficiency, estimation accuracy, user success, governance, delivery planning, technical consulting, startup, product strategy, cross-functional
 - **Source(s):** Resume 2026-04-06; user clarification 2026-04-06
 - **Ambiguities / follow-up needed:**
   - What concrete outcomes or shipped products can be described for each client?
@@ -40,9 +42,10 @@ _Last updated: 2026-04-06_
   - Performed substantial individual contributor engineering work building the media application and social information-sharing product
   - Re-architected core data access patterns and system flows
   - Improved app startup time by 400% for users participating in multiple conversations by redesigning chat-state handling around Twilio events and persisting conversation interaction state, preventing expensive unnecessary processing during app launch
+  - Designed a human-in-the-loop host utility for the consumer concierge launch, creating the host workflow, alerting model, and escalation path needed to route urgent traveler requests across a three-actor service system before automated inference was viable
   - Designed and implemented API-driven systems, including real-time communication services and event-driven workflows
   - Aligned engineering execution with product and business priorities
-- **Keywords / tags:** head of product management, engineering lead, founding technical hire, product discovery, customer research, design discovery, hiring, performance management, app store launch, mobile product, Twilio, performance optimization, APIs, event-driven systems, cross-functional, delivery
+- **Keywords / tags:** head of product management, engineering lead, founding technical hire, product discovery, customer research, design discovery, hiring, performance management, app store launch, mobile product, Twilio, performance optimization, APIs, event-driven systems, human-in-the-loop systems, concierge workflow, alerting, marketplace operations, operational systems, automation bridge, cross-functional, delivery
 - **Source(s):** Resume 2026-04-06; user clarification 2026-04-06
 - **Key milestones:**
   - Broke ground on the product: December 2021
@@ -57,12 +60,10 @@ _Last updated: 2026-04-06_
 - **Dates:** 2016–2021
 - **Location:** New York, NY
 - **Title progression:** Started as Software Engineer in 2016, promoted to Senior Software Engineer in 2019, and took on Engineering Manager responsibilities in May 2021; senior engineering and engineering management titles overlapped.
-- **Operating model:** Agile-XP consultancy with heavy emphasis on TDD, pair programming, one-week sprints, and continuous delivery cycles.
 - **Summary:** Product-focused technologist and lead engineer delivering complex mobile and web applications across multiple consulting engagements, balancing velocity with maintainability while growing from contributor to team lead and engineering manager.
 - **Responsibilities / evidence:**
   - Managed development teams
   - Led design and delivery of data-intensive APIs and integrations
-  - Worked in an Agile-XP environment centered on TDD, pair programming, one-week iterations, and continuous delivery
   - Conducted performance reviews
   - Mentored engineers
   - Established best practices for sustainable delivery
@@ -72,8 +73,8 @@ _Last updated: 2026-04-06_
   - **Jetblack / Walmart Labs (2019):** Engineering team lead for a 5-person squad building a greenfield app to coordinate last-mile delivery for a high-end boutique consumer goods delivery service. Although the project was cut short when the company folded earlier than expected, led the engineering team in task delivery, hands-on engineering, teamwork, project planning, and product discovery/observation; helped align the team with the broader organization and coordinated closely with DevOps, machine learning, and other adjacent teams.
   - **JOOR (Fall 2017–Spring 2018):** Python contributor to an ETL pipeline ingesting and normalizing large volumes of client data; contributed to DevOps modernization including early Kubernetes orchestration and Docker containerization; led and coached QA engineers to modernize their work
   - **Casper / NYC Landlords / FloodHelp (2016):** Contributor across multiple early client engagements, including FloodHelp, a flood insurance warning/information tool for NYC residents in collaboration with IDEO
-- **Keywords / tags:** engineering management, senior software engineer, consulting, Agile-XP, TDD, pair programming, one-week sprints, continuous delivery, team lead, delivery, Python, ETL, Kubernetes, Docker, React, product discovery, logistics, last-mile delivery, QA modernization, mentoring, cross-functional
-- **Source(s):** Resume 2026-04-06; user clarification 2026-04-06; user clarification 2026-04-08
+- **Keywords / tags:** engineering management, senior software engineer, consulting, team lead, delivery, Python, ETL, Kubernetes, Docker, React, product discovery, logistics, last-mile delivery, QA modernization, mentoring, cross-functional
+- **Source(s):** Resume 2026-04-06; user clarification 2026-04-06
 - **Ambiguities / follow-up needed:**
   - What delivery/project management responsibilities should be called out explicitly across these engagements?
   - Any concrete outcomes, launch results, or scale metrics for Facebook, Pager, Jetblack, JOOR, or FloodHelp?
